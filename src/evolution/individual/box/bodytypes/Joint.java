@@ -13,7 +13,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import evolution.Mutations;
 import java.io.IOException;
-import nodes.TNode;
+import evolution.nodes.TNode;
 
 /**
  *

@@ -22,7 +22,7 @@ import evolution.Mutations;
 import evolution.individual.AbstractCreature;
 import java.io.IOException;
 import listener.MovementListener;
-import nodes.TNode;
+import evolution.nodes.TNode;
 
 /**
  *

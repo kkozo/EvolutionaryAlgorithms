@@ -16,7 +16,7 @@ import java.util.List;
 import evolution.individual.box.bodytypes.BoxBody;
 import evolution.individual.box.bodytypes.Joint;
 import evolution.individual.box.bodytypes.JointTypes;
-import nodes.TNode;
+import evolution.nodes.TNode;
 
 /**
  *

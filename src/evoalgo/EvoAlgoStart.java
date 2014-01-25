@@ -41,7 +41,7 @@ import util.Assets;
  *
  * @author Andi
  */
-public class EvoAlgo extends SimpleApplication {
+public class EvoAlgoStart extends SimpleApplication {
 
     public static int creatureID = 0;
     private static EvolutionController evolutionController;
@@ -49,7 +49,7 @@ public class EvoAlgo extends SimpleApplication {
 
     public static void main(String args[]) {
         try {
-            EvoAlgo app = new EvoAlgo();
+            EvoAlgoStart app = new EvoAlgoStart();
             app.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,7 +115,7 @@ public class EvoAlgo extends SimpleApplication {
             return pop;
         } catch (IOException ex) {
             ex.printStackTrace();
-            Logger.getLogger(EvoAlgo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EvoAlgoStart.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

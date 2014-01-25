@@ -8,7 +8,7 @@ import evolution.individual.AbstractIndividual;
 import java.util.List;
 
 /**
- *
+ * Mutates an individual
  * @author Andi
  */
 public interface IMutator<T extends AbstractIndividual> {

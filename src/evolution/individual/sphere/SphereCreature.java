@@ -15,7 +15,7 @@ import com.jme3.scene.Node;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import evolution.individual.AbstractCreature;
 import java.io.IOException;
-import nodes.TNode;
+import evolution.nodes.TNode;
 
 /**
  *

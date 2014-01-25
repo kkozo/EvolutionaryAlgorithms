@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nodes;
+package evolution.nodes;
 
 import evolution.individual.box.bodytypes.Joint;
 import com.jme3.export.Savable;

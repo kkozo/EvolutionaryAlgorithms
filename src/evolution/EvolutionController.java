@@ -4,7 +4,6 @@
  */
 package evolution;
 
-import com.bulletphysics.dynamics.RigidBody;
 import evolution.individual.box.BoxIndividual;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -28,8 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sun.applet.Main;
-
 /**
  *
  * @author Andi
@@ -155,7 +152,7 @@ public class EvolutionController implements Control {
 
             AbstractCreature creature = currentIndividual.getCreature();
             creature.resetCreature();
-            creature.getNode(rootNode, bulletAppState.getPhysicsSpace(), evoalgo.EvoAlgo.creatureID, currentIndividual.getTerrain());
+            creature.getNode(rootNode, bulletAppState.getPhysicsSpace(), evoalgo.EvoAlgoStart.creatureID, currentIndividual.getTerrain());
         }
     }
 
@@ -267,7 +264,7 @@ public class EvolutionController implements Control {
         try {
             exporter.save(population, file);
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Error: Failed to save!", ex);
+            Logger.getLogger(EvolutionController.class.getName()).log(Level.SEVERE, "Error: Failed to save!", ex);
         }
     }
 
@@ -287,7 +284,7 @@ public class EvolutionController implements Control {
         try {
             exporter.save(population, file);
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Error: Failed to save!", ex);
+            Logger.getLogger(EvolutionController.class.getName()).log(Level.SEVERE, "Error: Failed to save!", ex);
         }
     }
 }

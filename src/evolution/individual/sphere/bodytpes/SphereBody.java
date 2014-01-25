@@ -13,7 +13,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 import evolution.EvolutionConstants;
 import java.io.IOException;
-import nodes.TNode;
+import evolution.nodes.TNode;
 import util.Assets;
 
 /**

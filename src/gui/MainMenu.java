@@ -13,7 +13,7 @@ import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
 import de.lessvoid.nifty.examples.defaultcontrols.common.CommonBuilders;
-import evoalgo.EvoAlgo;
+import evoalgo.EvoAlgoStart;
 import java.awt.Color;
 
 /**
@@ -22,10 +22,10 @@ import java.awt.Color;
  */
 public class MainMenu {
 
-    private final EvoAlgo app;
+    private final EvoAlgoStart app;
     private static CommonBuilders builders = new CommonBuilders();
 
-    public MainMenu(final EvoAlgo app) {
+    public MainMenu(final EvoAlgoStart app) {
         this.app = app;
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
                 app.getAssetManager(), app.getInputManager(), app.getAudioRenderer(), app.getGuiViewPort());

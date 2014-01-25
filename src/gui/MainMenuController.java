@@ -7,7 +7,7 @@ package gui;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
-import evoalgo.EvoAlgo;
+import evoalgo.EvoAlgoStart;
 import evolution.Population;
 import java.io.File;
 import javax.swing.JFileChooser;
@@ -19,11 +19,11 @@ import javax.swing.filechooser.FileFilter;
  */
 public class MainMenuController implements ScreenController {
 
-    private EvoAlgo app;
+    private EvoAlgoStart app;
     private Screen screen;
     private Nifty nifty;
 
-    public MainMenuController(EvoAlgo app) {
+    public MainMenuController(EvoAlgoStart app) {
         this.app = app;
     }
 

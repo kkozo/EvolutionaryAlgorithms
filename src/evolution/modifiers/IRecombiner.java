@@ -8,7 +8,7 @@ import evolution.individual.AbstractIndividual;
 import java.util.List;
 
 /**
- *
+ * Recombines Individuals and returns kids.
  * @author Andi
  */
 public interface IRecombiner<T extends AbstractIndividual> {
