@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution.nodes;
 
 import evolution.individual.box.bodytypes.Joint;
@@ -10,7 +6,7 @@ import com.jme3.scene.Geometry;
 import java.util.List;
 
 /**
- *
+ * Main Node for Bodies. Bodies can be connected with Joints.
  * @author Andi
  */
 public abstract class TNode implements Savable{

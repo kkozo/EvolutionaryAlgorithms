@@ -1,11 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution;
 
-/**
- *
+/** TODO: Make obsolete and replace with GUI.
+ * Logger for each generation.
  * @author Andi
  */
 public class EvaluationLogger {

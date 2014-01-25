@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution.individual.box.bodytypes;
 
 import com.jme3.export.InputCapsule;
@@ -16,7 +12,7 @@ import java.io.IOException;
 import evolution.nodes.TNode;
 
 /**
- *
+ * Joint class which connects two TNodes
  * @author Andi
  */
 public class Joint implements Savable {
@@ -106,7 +102,7 @@ public class Joint implements Savable {
         capsule.write(attachPoint, "attachPoint", new Vector3f());
         capsule.write(forces, "forces", new Vector3f());
         capsule.write(child, "jointChild", new BoxBody());
-        capsule.write(jointType, "jointType", JointTypes.continousJoint);
+        capsule.write(jointType, "jointType", JointTypes.continuousJoint);
     }
 
     @Override
@@ -118,6 +114,6 @@ public class Joint implements Savable {
         forces = (Vector3f) capsule.readSavable("forces", new Vector3f());
         child = (BoxBody) capsule.readSavable("jointChild", new BoxBody());
         child.makeGeometry();
-        jointType = (JointTypes) capsule.readEnum("jointType", JointTypes.class, JointTypes.continousJoint);
+        jointType = (JointTypes) capsule.readEnum("jointType", JointTypes.class, JointTypes.continuousJoint);
     }
 }

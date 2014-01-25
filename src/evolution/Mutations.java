@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution;
 
 import evolution.individual.box.BoxIndividual;
@@ -18,8 +14,8 @@ import evolution.individual.box.bodytypes.Joint;
 import evolution.individual.box.bodytypes.JointTypes;
 import evolution.nodes.TNode;
 
-/**
- *
+/** TODO: Will be outsourced to Mutator Classes
+ * Class for a series of mutations.
  * @author Andi
  */
 public class Mutations {
@@ -184,7 +180,7 @@ public class Mutations {
     }
 
     public static void mutateJoint(Joint j) {
-        int jointType = FastMath.nextRandomInt(JointTypes.staticJoint.ordinal(), JointTypes.continousJoint.ordinal());
+        int jointType = FastMath.nextRandomInt(JointTypes.staticJoint.ordinal(), JointTypes.continuousJoint.ordinal());
         j.setJointType(JointTypes.values()[jointType]);
         j.setForces(mutateUnitVector(j.getForces(), MUT_DEVIATION));
         j.setAttachPoint(mutateUnitVector(j.getAttachPoint(), MUT_DEVIATION));
@@ -236,10 +232,10 @@ public class Mutations {
         System.out.println("RANDOM JOINT TYPE TEST");
         int[] randoms = new int[3];
         for (int i = 0; i < 3500; ++i) {
-            randoms[FastMath.nextRandomInt(JointTypes.staticJoint.ordinal(), JointTypes.continousJoint.ordinal())]++;
+            randoms[FastMath.nextRandomInt(JointTypes.staticJoint.ordinal(), JointTypes.continuousJoint.ordinal())]++;
         }
         System.out.println("Static Joints: " + randoms[JointTypes.staticJoint.ordinal()]);
-        System.out.println("Continous Joints: " + randoms[JointTypes.continousJoint.ordinal()]);
+        System.out.println("Continous Joints: " + randoms[JointTypes.continuousJoint.ordinal()]);
         System.out.println("Reactive Joints: " + randoms[JointTypes.reactiveJoint.ordinal()]);
         System.out.println("");
         System.out.println("RANDOM GAUSS TEST");

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution.individual.sphere;
 
 import evolution.individual.sphere.bodytpes.SphereBody;
@@ -18,7 +14,7 @@ import java.io.IOException;
 import evolution.nodes.TNode;
 
 /**
- *
+ * Creature implementation for the Sphere.
  * @author Andi
  */
 public class SphereCreature extends AbstractCreature {

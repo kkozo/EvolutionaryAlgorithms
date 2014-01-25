@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evoalgo;
 
 import com.jme3.app.SimpleApplication;
@@ -12,9 +8,7 @@ import com.jme3.export.binary.BinaryImporter;
 
 import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
-import com.jme3.input.MouseInput;
 import com.jme3.input.controls.KeyTrigger;
-import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -38,7 +32,7 @@ import listener.MainControlsListener;
 import util.Assets;
 
 /**
- *
+ * Start Program
  * @author Andi
  */
 public class EvoAlgoStart extends SimpleApplication {
@@ -155,24 +149,22 @@ public class EvoAlgoStart extends SimpleApplication {
             this.evolutionController = new EvolutionController(rootNode, bulletAppState, currentIndividualNode, cam, pop);
         }
         flyCam.setDragToRotate(false);
-        MainControlsListener iL = new MainControlsListener(bulletAppState, rootNode, cam, evolutionController);
-        inputManager.addMapping("shoot",
-                new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        MainControlsListener iL = new MainControlsListener(bulletAppState, evolutionController);
         inputManager.addMapping("reset",
                 new KeyTrigger(KeyInput.KEY_NUMPAD0));
         inputManager.addMapping("speeddown",
                 new KeyTrigger(KeyInput.KEY_SUBTRACT));
         inputManager.addMapping("speedup",
                 new KeyTrigger(KeyInput.KEY_ADD));
-        inputManager.addMapping("motoron",
+        inputManager.addMapping("start",
                 new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("del",
                 new KeyTrigger(KeyInput.KEY_DELETE));
-        inputManager.addMapping("mut",
+        inputManager.addMapping("focus",
                 new KeyTrigger(KeyInput.KEY_M));
         inputManager.addMapping("save",
                 new KeyTrigger(KeyInput.KEY_F10));
-        inputManager.addListener(iL, "shoot", "reset", "speedup", "speeddown", "motoron", "del", "mut", "save");
+        inputManager.addListener(iL, "reset", "speedup", "speeddown", "start", "del", "focus", "save");
 
         /**
          * Initialize the scene, materials, and physics space

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package config;
 
 import com.jme3.export.InputCapsule;
@@ -9,14 +5,10 @@ import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.export.Savable;
-import evolution.individual.AbstractIndividual;
-import evolution.modifiers.IMutator;
-import evolution.modifiers.IRecombiner;
-import evolution.modifiers.ISelector;
 import java.io.IOException;
 
-/**
- *
+/** TODO: Implement fully
+ * EvolutionConfig
  * @author Andi
  */
 public class EvolutionConfig implements Savable {

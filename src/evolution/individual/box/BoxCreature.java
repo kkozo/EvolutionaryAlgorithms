@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution.individual.box;
 
 import evolution.individual.box.bodytypes.BoxBody;
@@ -25,7 +21,7 @@ import listener.MovementListener;
 import evolution.nodes.TNode;
 
 /**
- *
+ * Extension of AbstractCreature for the Box Creature
  * @author Andi
  */
 public class BoxCreature extends AbstractCreature {

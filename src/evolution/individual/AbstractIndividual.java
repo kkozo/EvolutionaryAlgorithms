@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution.individual;
 
 import com.jme3.export.JmeExporter;
@@ -11,12 +7,12 @@ import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import evolution.Mutations;
-import evolution.individual.box.BoxIndividual;
 import java.io.IOException;
 import util.Assets;
 
 /**
- *
+ * This is an abstract class for each individual type and should be extended if a new individual has to be created.
+ * AbstractCreature has to be extended too.
  * @author Andi
  */
 public abstract class AbstractIndividual<T extends AbstractCreature> implements Comparable, Savable {

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import com.jme3.niftygui.NiftyJmeDisplay;
@@ -14,10 +10,9 @@ import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
 import de.lessvoid.nifty.examples.defaultcontrols.common.CommonBuilders;
 import evoalgo.EvoAlgoStart;
-import java.awt.Color;
 
 /**
- *
+ * Builds the mainmenu
  * @author Andi
  */
 public class MainMenu {

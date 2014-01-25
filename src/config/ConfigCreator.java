@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package config;
 
 import evolution.individual.AbstractIndividual;
@@ -17,8 +13,8 @@ import evolution.modifiers.general.NonRecombiner;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
+/** TODO: Implement fully
+ * Creates a config.
  * @author Andi
  */
 public class ConfigCreator {

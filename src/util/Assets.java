@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package util;
 
 import com.jme3.asset.AssetManager;
@@ -10,7 +6,7 @@ import com.jme3.material.Material;
 import com.jme3.texture.Texture;
 
 /**
- *
+ * Loads different types of assets for future use in other classes.
  * @author Andi
  */
 public class Assets {
@@ -55,18 +51,13 @@ public class Assets {
         mat_terrain.setTexture("Tex1", grass);
         mat_terrain.setFloat("Tex1Scale", 64f);
 
-        /**
-         * 1.3) Add DIRT texture into the green layer (Tex2)
-         */
         Texture dirt = assetManager.loadTexture(
                 "Textures/Terrain/splat/dirt.jpg");
         dirt.setWrap(Texture.WrapMode.Repeat);
         mat_terrain.setTexture("Tex2", dirt);
         mat_terrain.setFloat("Tex2Scale", 32f);
 
-        /**
-         * 1.4) Add ROAD texture into the blue layer (Tex3)
-         */
+        
         Texture rock = assetManager.loadTexture(
                 "Textures/Terrain/splat/road.jpg");
         rock.setWrap(Texture.WrapMode.Repeat);

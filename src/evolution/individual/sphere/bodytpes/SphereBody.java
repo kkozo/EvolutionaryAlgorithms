@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution.individual.sphere.bodytpes;
 
 import com.jme3.bullet.control.RigidBodyControl;
@@ -17,7 +13,7 @@ import evolution.nodes.TNode;
 import util.Assets;
 
 /**
- *
+ * Just the simple body for the sphere which creates the geometry.
  * @author Andi
  */
 public class SphereBody extends TNode {

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution.individual.box.bodytypes;
 
 import com.jme3.bullet.control.RigidBodyControl;
@@ -22,7 +18,7 @@ import evolution.nodes.TNode;
 import util.Assets;
 
 /**
- *
+ * A simple boxbody for the BoxIndividual.
  * @author Andi
  */
 public class BoxBody extends TNode {

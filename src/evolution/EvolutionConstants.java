@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package evolution;
 
 import evolution.individual.box.BoxIndividual;
@@ -9,8 +6,9 @@ import evolution.individual.sphere.SphereIndividual;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
+/** TODO: Make obsolete and replace with EvolutionConfig
+ * Constants for the evolution.
+ * 
  * @author Andi
  */
 public class EvolutionConstants {

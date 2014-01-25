@@ -1,33 +1,30 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution.modifiers.general;
 
 import evolution.EvolutionConstants;
 import evolution.individual.AbstractIndividual;
-import evolution.individual.box.BoxIndividual;
 import evolution.modifiers.ISelector;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *
+ * Selects Individuals according to fitness.
  * @author Andi
  */
 public class GeneralSelector implements ISelector<AbstractIndividual> {
-
+    private static final Logger logger = Logger.getLogger(GeneralSelector.class.getName());
     @Override
     public ArrayList<AbstractIndividual> selection(ArrayList<AbstractIndividual> individuals, int amount) {
 
         sortIndividuals(individuals);
         List<AbstractIndividual> toBeRemoved = new ArrayList<>();
         for (AbstractIndividual e: individuals) {
-            System.out.println(e.getFitness());
+            logger.log(Level.INFO, "{0}", e.getFitness());
             if (e.getFitness() < EvolutionConstants.DELETE_THRESHOLD) {
-                System.out.println("Individual: " + e.getId() + " below threshold.");
+                logger.log(Level.WARNING, "Individual: {0} below threshold.", e.getId());
                 toBeRemoved.add(e);
             }
         }

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution.individual.sphere;
 
 import com.jme3.export.InputCapsule;
@@ -15,7 +11,7 @@ import java.io.IOException;
 import evolution.individual.sphere.bodytpes.SphereBody;
 
 /**
- *
+ * This Individual is a basic sphere which rolls across the terrain.
  * @author Andi
  */
 public class SphereIndividual extends AbstractIndividual<SphereCreature> {

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution;
 
 import com.jme3.export.InputCapsule;
@@ -18,7 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- *
+ * Population of an Individual. AbstractIndividual has to be extended.
+ * Selector and Recombiner have to be implemented
  * @author Andi
  */
 public class Population<T extends AbstractIndividual> implements Savable {

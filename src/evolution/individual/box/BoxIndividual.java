@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution.individual.box;
 
 import evolution.individual.box.bodytypes.BoxBody;
@@ -21,7 +17,7 @@ import evolution.individual.AbstractIndividual;
 import java.io.IOException;
 
 /**
- *
+ * A type of creature that connects boxes with joints. Joints can move.
  * @author Andi
  */
 public class BoxIndividual extends AbstractIndividual<BoxCreature> {
@@ -106,7 +102,7 @@ public class BoxIndividual extends AbstractIndividual<BoxCreature> {
 
     public Joint createJoint() {
         Vector3f attachPoint = Mutations.createRandomVector();
-        int jointType = FastMath.nextRandomInt(JointTypes.staticJoint.ordinal(), JointTypes.continousJoint.ordinal());
+        int jointType = FastMath.nextRandomInt(JointTypes.staticJoint.ordinal(), JointTypes.continuousJoint.ordinal());
         Joint newJoint = new Joint(attachPoint, JointTypes.values()[jointType]);
 
         return newJoint;

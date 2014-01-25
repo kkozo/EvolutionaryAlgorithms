@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package listener;
 
 import com.jme3.bullet.joints.SixDofJoint;
@@ -22,7 +18,7 @@ import evolution.individual.box.bodytypes.Joint;
 import evolution.individual.box.bodytypes.JointTypes;
 
 /**
- *
+ * This listener decides if a joint should move or not. 
  * @author Andi
  */
 public class MovementListener implements Control {
@@ -40,7 +36,7 @@ public class MovementListener implements Control {
         movement = 0f;
         this.sixDof = sixdof;
         this.terrain = quad;
-        if (j.getJointType() == JointTypes.continousJoint) {
+        if (j.getJointType() == JointTypes.continuousJoint) {
             enabled = true;
 
             sixDof.getRotationalLimitMotor(0).setEnableMotor(true);
@@ -78,13 +74,9 @@ public class MovementListener implements Control {
 
     @Override
     public void update(float tpf) {
-//        System.out.println("IS ENABLED: "+isEnabled());
         if (isEnabled()) {
             doMovement(tpf);
-//            System.out.println("Type:"+joint.getJointType() + " Doing movement");
-//            System.out.println(joint.getForces());
-//            System.out.println(joint.getUpperBound());
-//            System.out.println(joint.getLowerBound());
+
         }
         if (joint.getJointType() == JointTypes.reactiveJoint) {
             if (checkCollision()) {
@@ -131,7 +123,6 @@ public class MovementListener implements Control {
     }
 
     private boolean checkCollision() {
-//        System.out.println("CHECKING COLLISION");
         terrain.updateGeometricState();
         CollisionResults res = new CollisionResults();
         int nr = terrain.collideWith(box.getWorldBound(), res);
@@ -139,8 +130,6 @@ public class MovementListener implements Control {
         if (nr > 0) {
             while (it.hasNext()) {
                 CollisionResult cr = it.next();
-//                    System.out.println(cr.);
-//                    System.out.println(cr.getGeometry());
                 return true;
 
             }

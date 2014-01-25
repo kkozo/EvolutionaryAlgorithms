@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution.individual;
 
 import com.jme3.bullet.PhysicsSpace;
@@ -14,7 +10,10 @@ import java.io.IOException;
 import evolution.nodes.TNode;
 
 /**
- *
+ * Basic abstract class for the creation of a creature.
+ * This has to be extended and connected to an AbstractIndividual.
+ * The Selector, Mutator and Recombiner should be specially implemented for a specific type of creature.
+ * 
  * @author Andi
  */
 public abstract class AbstractCreature implements Savable {

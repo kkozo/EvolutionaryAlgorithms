@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package evolution.individual.box.modifiers;
 
 import com.jme3.math.FastMath;
@@ -16,7 +12,7 @@ import evolution.individual.box.bodytypes.Joint;
 import evolution.modifiers.IRecombiner;
 
 /**
- *
+ * Swaps joints for 2 creatures and returns a list of kids
  * @author Andi
  */
 public class BoxCreatureRecombiner implements IRecombiner<BoxIndividual>{

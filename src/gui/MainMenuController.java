@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import de.lessvoid.nifty.Nifty;
@@ -14,7 +10,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 /**
- *
+ * Controller for the MainMenuScreen
  * @author Andi
  */
 public class MainMenuController implements ScreenController {
