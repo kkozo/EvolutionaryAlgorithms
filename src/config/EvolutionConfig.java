@@ -5,23 +5,30 @@ import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.export.Savable;
+import evolution.individual.AbstractIndividual;
+import evolution.modifiers.IMutator;
+import evolution.modifiers.IRecombiner;
+import evolution.modifiers.ISelector;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/** TODO: Implement fully
- * EvolutionConfig
+/**
+ * TODO: Implement fully EvolutionConfig
+ *
  * @author Andi
  */
 public class EvolutionConfig implements Savable {
 
-    private String recombiner;
-    private String mutator;
-    private String selector;
-    private String individualType;
+    private static final Logger logger = Logger.getLogger(EvolutionConfig.class.getName());
+    private IRecombiner recombiner;
+    private IMutator mutator;
+    private ISelector selector;
+    private AbstractIndividual individualType;
     private int populationSize;
     private int selection;
     private int kids;
     private float evalTime;
-    private float density;
     private int jointMaxPerIndividual;
     private int jointMinPerIndividual;
     private int maxCreatureMutations;
@@ -38,7 +45,6 @@ public class EvolutionConfig implements Savable {
         selection = 10;
         kids = 5;
         evalTime = 50f;
-        density = 5.5f;
         jointMaxPerIndividual = 10;
         jointMinPerIndividual = 2;
         maxCreatureMutations = 3;
@@ -47,38 +53,37 @@ public class EvolutionConfig implements Savable {
         maxHeight = 4.5f;
         deleteThreshold = -5f;
         name = "Default";
-        individualType = "BOX";
     }
 
-    public String getRecombiner() {
+    public IRecombiner getRecombiner() {
         return recombiner;
     }
 
-    public void setRecombiner(String recombiner) {
+    public void setRecombiner(IRecombiner recombiner) {
         this.recombiner = recombiner;
     }
 
-    public String getMutator() {
+    public IMutator getMutator() {
         return mutator;
     }
 
-    public void setMutator(String mutator) {
+    public void setMutator(IMutator mutator) {
         this.mutator = mutator;
     }
 
-    public String getSelector() {
+    public ISelector getSelector() {
         return selector;
     }
 
-    public void setSelector(String selector) {
+    public void setSelector(ISelector selector) {
         this.selector = selector;
     }
 
-    public String getIndividualType() {
+    public AbstractIndividual getIndividualType() {
         return individualType;
     }
 
-    public void setIndividualType(String individualType) {
+    public void setIndividualType(AbstractIndividual individualType) {
         this.individualType = individualType;
     }
 
@@ -128,14 +133,6 @@ public class EvolutionConfig implements Savable {
 
     public void setEvalTime(float evalTime) {
         this.evalTime = evalTime;
-    }
-
-    public float getDensity() {
-        return density;
-    }
-
-    public void setDensity(float density) {
-        this.density = density;
     }
 
     public int getJointMaxPerIndividual() {
@@ -202,7 +199,6 @@ public class EvolutionConfig implements Savable {
         out.write(selection, "selection", 10);
         out.write(kids, "kids", 5);
         out.write(evalTime, "evalTime", 150f);
-        out.write(density, "density", 5.5f);
         out.write(jointMaxPerIndividual, "jointMaxPerIndividual", 10);
         out.write(jointMinPerIndividual, "jointMinPerIndividual", 2);
         out.write(maxCreatureMutations, "maxCreatureMutations", 3);
@@ -211,10 +207,10 @@ public class EvolutionConfig implements Savable {
         out.write(maxHeight, "maxHeight", 4.5f);
         out.write(deleteThreshold, "deleteThreshold", -5f);
         out.write(name, "name", "Default");
-        out.write(individualType, "individualType", "BOX");
-        out.write(recombiner, "recombiner", "BOX");
-        out.write(mutator, "mutator", "BOX");
-        out.write(selector, "selector", "BOX");
+        out.write(individualType.getType(), "individualType", "BOX");
+        out.write(recombiner.getInfo(), "recombiner", "BOX");
+        out.write(mutator.getInfo(), "mutator", "BOX");
+        out.write(selector.getInfo(), "selector", "BOX");
     }
 
     @Override
@@ -225,7 +221,6 @@ public class EvolutionConfig implements Savable {
         selection = in.readInt("selection", 10);
         kids = in.readInt("kids", 5);
         evalTime = in.readFloat("evalTime", 50f);
-        density = in.readFloat("density", 5.5f);
         jointMaxPerIndividual = in.readInt("jointMaxPerIndividual", 10);
         jointMinPerIndividual = in.readInt("jointMinPerIndividual", 2);
         maxCreatureMutations = in.readInt("maxCreatureMutations", 3);
@@ -234,9 +229,20 @@ public class EvolutionConfig implements Savable {
         maxHeight = in.readFloat("maxHeight", 4.5f);
         deleteThreshold = in.readFloat("deleteThreshold", -5f);
         name = in.readString("name", "Default");
-        individualType = in.readString("individualType", "BOX");
-        recombiner = in.readString("recombiner", "BOX");
-        mutator = in.readString("mutator", "BOX");
-        selector = in.readString("selector", "BOX");
+        String individualTypeS = in.readString("individualType", "SPHERE");
+        String recombinerS = in.readString("recombiner", "NON");
+        String mutatorS = in.readString("mutator", "BOX");
+        String selectorS = in.readString("selector", "ALL");
+
+        selector = ConfigCreator.getSelector(selectorS);
+        recombiner = ConfigCreator.getRecombiner(recombinerS);
+        mutator = ConfigCreator.getMutator(mutatorS);
+        individualType = ConfigCreator.getIndividual(individualTypeS);
+
+        logger.log(Level.INFO, "Selector used: {0}", selector.getClass().getName());
+        logger.log(Level.INFO, "Individual used: {0}", individualType.getClass().getName());
+        logger.log(Level.INFO, "Mutator used: {0}", mutator.getClass().getName());
+        logger.log(Level.INFO, "Recombiner used: {0}", recombiner.getClass().getName());
+
     }
 }

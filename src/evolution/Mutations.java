@@ -5,6 +5,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.terrain.geomipmap.TerrainQuad;
+import config.EvolutionConfig;
 import evolution.individual.AbstractIndividual;
 import evolution.individual.box.BoxCreature;
 import java.util.ArrayList;
@@ -14,8 +15,9 @@ import evolution.individual.box.bodytypes.Joint;
 import evolution.individual.box.bodytypes.JointTypes;
 import evolution.nodes.TNode;
 
-/** TODO: Will be outsourced to Mutator Classes
- * Class for a series of mutations.
+/**
+ * TODO: Will be outsourced to Mutator Classes Class for a series of mutations.
+ *
  * @author Andi
  */
 public class Mutations {
@@ -26,13 +28,15 @@ public class Mutations {
     private static float BOX_MUTATION_CONSTANT = 0.95f;
     private static float JOINT_MUTATION_CONSTANT = 0.95f;
     private static int mutationCount = 0;
+    private static EvolutionConfig config = new EvolutionConfig();
 
-    public static void mutateIndividual(AbstractIndividual indiv) {
+    public static void mutateIndividual(AbstractIndividual indiv, EvolutionConfig cconfig) {
+        config = cconfig;
         mutationCount = 0;
-        if (indiv instanceof BoxIndividual){
-        mutationWalker(((BoxCreature) indiv.getCreature()).getRoot(), (BoxIndividual)indiv);
+        if (indiv instanceof BoxIndividual) {
+            mutationWalker(((BoxCreature) indiv.getCreature()).getRoot(), (BoxIndividual) indiv);
         }
-        mutateTerrain(indiv.getTerrain(), EvolutionConstants.MAX_TERRAIN_MUTATIONS, EvolutionConstants.TERRAIN_MUT_STR);
+        mutateTerrain(indiv.getTerrain(), config.getMaxTerrainMutations(), config.getTerrainMutStr());
     }
 
     public static TerrainQuad mutateTerrain(TerrainQuad terrain, int max, float strength) {
@@ -42,7 +46,7 @@ public class Mutations {
                 float locx = (FastMath.nextRandomFloat() * 64 * 2) - 64f;
                 float locz = (FastMath.nextRandomFloat() * 64 * 2) - 64f;
                 float radius = FastMath.nextRandomFloat() * 32 + 8;
-                float str = FastMath.nextRandomFloat() * (EvolutionConstants.MAX_HEIGHT * 2) - EvolutionConstants.MAX_HEIGHT;
+                float str = FastMath.nextRandomFloat() * (config.getMaxHeight() * 2) - config.getMaxHeight();
                 adjustHeight(new Vector3f(locx, 0, locz), radius, str, terrain);
             }
         }
@@ -60,7 +64,7 @@ public class Mutations {
 
 //            System.out.println("BOX MUTATED");
         }
-        if (mutationCount > EvolutionConstants.MAX_CREATURE_MUTATIONS) {
+        if (mutationCount > config.getMaxCreatureMutations()) {
 //            System.out.println("MUT_MAX REACHED");
             return;
         }
@@ -94,7 +98,7 @@ public class Mutations {
             TNode eNode = e.getChild();
             BoxBody eff = (BoxBody) eNode;
 //            System.out.println("TRAVERSING");
-            if (mutationCount > EvolutionConstants.MAX_CREATURE_MUTATIONS) {
+            if (mutationCount > config.getMaxCreatureMutations()) {
 //                System.out.println("MAX REACHED");
                 return;
             }
@@ -192,7 +196,7 @@ public class Mutations {
         if (whichMut > 0.95f) {
             int delOrAdd = FastMath.nextRandomInt(0, 1);
             if (delOrAdd == 0) {
-                if (nrOfJoints < EvolutionConstants.JOINT_MAX_PER_INDIVIDUAL) { //add a joint if nr is smaller
+                if (nrOfJoints < config.getJointMaxPerIndividual()) { //add a joint if nr is smaller
                     Joint myJoint = creator.createJoint();
                     BoxBody myBody = creator.createBoxBody(1);
                     myJoint.setChild(myBody);
@@ -201,7 +205,7 @@ public class Mutations {
                 } else {
                     System.out.println("MAX_REACHED");
                 }
-            } else if (nrOfJoints > EvolutionConstants.JOINT_MIN_PER_INDIVIDUAL) { // delete a joint if not at minimum
+            } else if (nrOfJoints > config.getJointMinPerIndividual()) { // delete a joint if not at minimum
                 if (b.getChildren().size() > 1) {
                     int whichJoint = FastMath.nextRandomInt(0, b.getChildren().size() - 1);
                     b.getChildren().remove(whichJoint);
@@ -218,7 +222,6 @@ public class Mutations {
         random = new java.util.Random(randomSeed);
     }
 
-    
     public static float gaussianFloat(float dev) {
         return (float) random.nextGaussian() * dev;
     }
@@ -245,8 +248,8 @@ public class Mutations {
 //            System.out.println(temp);
             deviation += temp;
         }
-        BoxIndividual indiv = (BoxIndividual)new BoxIndividual().createRandomIndividual();
-        int jointmax = ((BoxCreature)indiv.getCreature()).getJoints();
+        BoxIndividual indiv = (BoxIndividual)new BoxIndividual().createRandomIndividual(new EvolutionConfig());
+        int jointmax = ((BoxCreature) indiv.getCreature()).getJoints();
         int[] jointCounts = new int[jointmax];
         for (int i = 0; i < 10000000; ++i) {
             if (jointmax > 1) {

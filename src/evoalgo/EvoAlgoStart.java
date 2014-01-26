@@ -14,13 +14,11 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.debug.Arrow;
-import evolution.EvolutionConstants;
+import config.ConfigCreator;
+import config.EvolutionConfig;
 import evolution.EvolutionController;
 import evolution.Population;
 import evolution.individual.AbstractIndividual;
-import evolution.individual.box.modifiers.BoxMutator;
-import evolution.modifiers.general.GeneralSelector;
-import evolution.modifiers.general.NonRecombiner;
 import gui.MainMenu;
 import java.io.File;
 import java.io.IOException;
@@ -128,24 +126,17 @@ public class EvoAlgoStart extends SimpleApplication {
 
         if (pop == null) {
             String typeString = "SPHERE";
-            Class<?> type = EvolutionConstants.possibleIndividuals.get(typeString);
-            Population genericPop = createPopulation(type);
-            genericPop.setIndividualType(type);
-            Constructor<?> constr = type.getConstructor();
-            Object o = constr.newInstance();
-            genericPop.setSize(EvolutionConstants.POPULATION_SIZE);
-            for (int i = 0; i < EvolutionConstants.POPULATION_SIZE; ++i) {
-                genericPop.getIndividuals().add(((AbstractIndividual) o).createRandomIndividual());
-            }
-            genericPop.setSelector(new GeneralSelector());
-            genericPop.setMutator(new BoxMutator());
-            genericPop.setRecombiner(new NonRecombiner());
+            
+            EvolutionConfig config = ConfigCreator.createConfig(typeString, "ALL", "BOX","NON");
 
+            Population genericPop = new Population<>();
+  
+            for (int i = 0; i < config.getPopulationSize(); ++i) {
+                genericPop.getIndividuals().add(config.getIndividualType().createRandomIndividual(genericPop.getConfig()));
+            }
+            genericPop.setConfig(config);
             this.evolutionController = new EvolutionController(rootNode, bulletAppState, currentIndividualNode, cam, genericPop);
         } else {
-            pop.setSelector(new GeneralSelector());
-            pop.setMutator(new BoxMutator());
-            pop.setRecombiner(new NonRecombiner());
             this.evolutionController = new EvolutionController(rootNode, bulletAppState, currentIndividualNode, cam, pop);
         }
         flyCam.setDragToRotate(false);
@@ -186,8 +177,5 @@ public class EvoAlgoStart extends SimpleApplication {
         rootNode.attachChild(arrowGeom);
     }
 
-    Population createPopulation(Class<?> type) {
-        Population<?> pop = new Population<>();
-        return pop;
-    }
+    
 }

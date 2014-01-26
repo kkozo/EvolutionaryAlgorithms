@@ -1,6 +1,5 @@
 package evolution;
 
-import evolution.individual.box.BoxIndividual;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.joints.PhysicsJoint;
@@ -25,7 +24,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * MainController for the evolution. Handles timings and evaluations for each individual.
+ * MainController for the evolution. Handles timings and evaluations for each
+ * individual.
+ *
  * @author Andi
  */
 public class EvolutionController implements Control {
@@ -48,6 +49,7 @@ public class EvolutionController implements Control {
     private final Vector3f targetVector = new Vector3f(0.98028874f, -15.296371f, -61.696625f);
     private float maxDistance = 0f;
     private String extension = ".j3o";
+
     public EvolutionController(Node rootNode, BulletAppState bulletAppState, BitmapText bitmapText, Camera cam, Population pop) {
 
         current_time = 0f;
@@ -81,46 +83,46 @@ public class EvolutionController implements Control {
                     current_time = 0f;
                     PAUSE = false;
                 }
-            } else if (current_time >= EvolutionConstants.EVAL_TIME) { // Time ran out
+            } else if (current_time >= population.getConfig().getEvalTime()) { // Time ran out
                 current_time = 0f;
                 PAUSE = true;
                 nextIndividual();
             }
-        } else {
+        }
 
-            Spatial child = rootNode.getChild("creature");
-            if (child != null) {
-                if (child.getControl(RigidBodyControl.class) != null) {
-                    RigidBodyControl control = child.getControl(RigidBodyControl.class);
-                    if (!control.isActive()) { // checks if creature is active - important for Sphere which can stop prematurely
-                        control.activate();
-                    }
-                    if (control.getPhysicsLocation().y < -400) {
-                        logger.info("Individual fell off");
-                        current_time = 0f;
-                        PAUSE = true;
-                        nextIndividual();
+        Spatial child = rootNode.getChild("creature");
+        if (child != null) {
+            if (child.getControl(RigidBodyControl.class) != null) {
+                RigidBodyControl control = child.getControl(RigidBodyControl.class);
+                if (!control.isActive()) { // checks if creature is active - important for Sphere which can stop prematurely
+                    control.activate();
+                }
+                if (control.getPhysicsLocation().y < -400) {
+                    logger.info("Individual fell off");
+                    current_time = 0f;
+                    PAUSE = true;
+                    nextIndividual();
 
-                    }
                 }
             }
         }
+
         if (currentIndividual != null && CAM_ENABLED) {
             cam.lookAt(currentIndividual.getCreature().getRoot().getGeom().getLocalTranslation(), Vector3f.UNIT_Y);
-            float p = EvolutionConstants.TERRAIN_MUT_STR;
-            int max = EvolutionConstants.MAX_TERRAIN_MUTATIONS;
-            EvolutionConstants.MAX_TERRAIN_MUTATIONS = 5;
-            EvolutionConstants.TERRAIN_MUT_STR = 0f;
-            Mutations.mutateIndividual(currentIndividual);
-            EvolutionConstants.TERRAIN_MUT_STR = p;
-            EvolutionConstants.MAX_TERRAIN_MUTATIONS = max;
-            removeAllObjects();
-            AbstractIndividual abs = currentIndividual.clone();
-            rootNode.attachChild(abs.getTerrain());
-            RigidBodyControl rig = new RigidBodyControl(0f);
-            abs.getTerrain().addControl(rig);
-            abs.getTerrain().getControl(RigidBodyControl.class).setFriction(1.5f);
-            bulletAppState.getPhysicsSpace().add(rig);
+//            float p = population.getConfig().getTerrainMutStr();
+//            int max = population.getConfig().getMaxTerrainMutations();
+//            EvolutionConstants.MAX_TERRAIN_MUTATIONS = 5;
+//            EvolutionConstants.TERRAIN_MUT_STR = 0f;
+//            Mutations.mutateIndividual(currentIndividual);
+//            EvolutionConstants.TERRAIN_MUT_STR = p;
+//            EvolutionConstants.MAX_TERRAIN_MUTATIONS = max;
+//            removeAllObjects();
+//            AbstractIndividual abs = currentIndividual.clone();
+//            rootNode.attachChild(abs.getTerrain());
+//            RigidBodyControl rig = new RigidBodyControl(0f);
+//            abs.getTerrain().addControl(rig);
+//            abs.getTerrain().getControl(RigidBodyControl.class).setFriction(1.5f);
+//            bulletAppState.getPhysicsSpace().add(rig);
         }
     }
 
@@ -133,7 +135,7 @@ public class EvolutionController implements Control {
         removeAllObjects();
         currentIndividualNr++;
 
-        if (currentIndividualNr >= population.getSize()) {
+        if (currentIndividualNr >= population.getConfig().getPopulationSize()) {
             evaluatePopulation();
         } else {
             currentIndividualGuiNode.setText("Current Individual: " + currentIndividualNr + " Current Generation:" + population.getGeneration());
@@ -179,19 +181,19 @@ public class EvolutionController implements Control {
             }
 
         }
-        population.setIndividuals(population.getSelector().selection(population.getIndividuals(), EvolutionConstants.SELECTION));
-        population.getIndividuals().addAll(population.getRecombiner().recombine(population.getIndividuals(), EvolutionConstants.KIDS));
+        population.setIndividuals(population.getConfig().getSelector().selection(population.getIndividuals(), population.getConfig()));
+        population.getIndividuals().addAll(population.getConfig().getRecombiner().recombine(population.getIndividuals(), population.getConfig()));
         fillUpWithExisting();
         logger.log(Level.INFO, "Best Indivudal has been Nr: {0} with Fitness: {1}", new Object[]{bestNr, bestIndividual});
         EvaluationLogger.BEST_FITNESS = bestIndividual;
         EvaluationLogger.BEST_INDIVIDUAL = bestNr;
-        for (int i = 0; i < population.getSize(); ++i) {
+        for (int i = 0; i < population.getConfig().getPopulationSize(); ++i) {
             logger.log(Level.INFO, "MUTATING: {0}", population.getIndividuals().get(i).getId());
             /*
              * TODO:
              * fix Cast
              */
-            Mutations.mutateIndividual(population.getIndividuals().get(i));
+            Mutations.mutateIndividual(population.getIndividuals().get(i), population.getConfig());
         }
 
         EvaluationLogger.flushLog();
@@ -206,8 +208,8 @@ public class EvolutionController implements Control {
      * TODO: Fills the Individuals with new Creatures - right now BoxIndividuals
      */
     private void fillUpToSize() {
-        while (population.getIndividuals().size() < EvolutionConstants.POPULATION_SIZE) {
-            population.getIndividuals().add((BoxIndividual) new BoxIndividual().createRandomIndividual());
+        while (population.getIndividuals().size() < population.getConfig().getPopulationSize()) {
+            population.getIndividuals().add(population.getConfig().getIndividualType().createRandomIndividual(population.getConfig()));
             logger.info("Fill up +1");
         }
     }
@@ -216,7 +218,7 @@ public class EvolutionController implements Control {
      * Fills up the Individual List with several existing ones
      */
     private void fillUpWithExisting() {
-        while (population.getIndividuals().size() < EvolutionConstants.POPULATION_SIZE) {
+        while (population.getIndividuals().size() < population.getConfig().getPopulationSize()) {
             int index = FastMath.nextRandomInt(0, population.getIndividuals().size() - 1);
             AbstractIndividual indiv = population.getIndividuals().get(index).clone();
             population.getIndividuals().add(indiv);
@@ -260,7 +262,6 @@ public class EvolutionController implements Control {
 
     public void save() {
         String filename = "lastSave";
-        String extension = ".j3o";
 
         int nr = 0;
         File check = new File(filename + "_" + nr + extension);
@@ -280,7 +281,7 @@ public class EvolutionController implements Control {
 
     public void save(String filename) {
 
-        
+
         int nr = 0;
         File check = new File(filename + "_" + nr + extension);
         while (check.exists()) {

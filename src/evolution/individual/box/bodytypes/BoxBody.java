@@ -9,7 +9,6 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
-import evolution.EvolutionConstants;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,7 @@ public class BoxBody extends TNode {
 
     @Override
     public void makeGeometry() {
-        control = new RigidBodyControl(getSize().x * getSize().y * getSize().z * EvolutionConstants.DENSITY);
+        control = new RigidBodyControl(getSize().x * getSize().y * getSize().z * 5.5f);
 
         Box b = new Box(getSize().x, getSize().y, getSize().z);
         body= b;

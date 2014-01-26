@@ -5,6 +5,7 @@ import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.terrain.geomipmap.TerrainQuad;
+import config.EvolutionConfig;
 import static evolution.Population.number;
 import evolution.individual.AbstractIndividual;
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class SphereIndividual extends AbstractIndividual<SphereCreature> {
     }
 
     @Override
-    public AbstractIndividual<SphereCreature> createRandomIndividual() {
+    public AbstractIndividual<SphereCreature> createRandomIndividual(EvolutionConfig config) {
         SphereIndividual newOne = new SphereIndividual(number++);
         newOne.setTerrain(createNewRandomTerrain());
         

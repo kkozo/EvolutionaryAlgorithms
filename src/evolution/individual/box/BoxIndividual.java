@@ -10,7 +10,7 @@ import com.jme3.export.OutputCapsule;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.terrain.geomipmap.TerrainQuad;
-import evolution.EvolutionConstants;
+import config.EvolutionConfig;
 import evolution.Mutations;
 import static evolution.Population.number;
 import evolution.individual.AbstractIndividual;
@@ -67,12 +67,12 @@ public class BoxIndividual extends AbstractIndividual<BoxCreature> {
     }
 
     @Override
-    public AbstractIndividual<BoxCreature> createRandomIndividual() {
+    public AbstractIndividual<BoxCreature> createRandomIndividual(EvolutionConfig config) {
         BoxIndividual newOne = new BoxIndividual(number++);
         newOne.setTerrain(createNewRandomTerrain());
         Vector3f rootBoxSize = new Vector3f(FastMath.nextRandomFloat(), FastMath.nextRandomFloat(), FastMath.nextRandomFloat()).normalize();
         BoxBody rootBody = new BoxBody(rootBoxSize, "Main");
-        int initialJoints = FastMath.nextRandomInt(1, EvolutionConstants.JOINT_INIT_MAX);
+        int initialJoints = FastMath.nextRandomInt(1, config.getJointInitMax());
         for (int i = 0; i < initialJoints; ++i) {
 
             Joint myJoint = createJoint();

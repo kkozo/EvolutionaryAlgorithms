@@ -1,6 +1,6 @@
 package evolution.modifiers.general;
 
-import evolution.EvolutionConstants;
+import config.EvolutionConfig;
 import evolution.individual.AbstractIndividual;
 import evolution.modifiers.ISelector;
 import java.util.ArrayList;
@@ -12,24 +12,28 @@ import java.util.logging.Logger;
 
 /**
  * Selects Individuals according to fitness.
+ *
  * @author Andi
  */
 public class GeneralSelector implements ISelector<AbstractIndividual> {
+
     private static final Logger logger = Logger.getLogger(GeneralSelector.class.getName());
+
     @Override
-    public ArrayList<AbstractIndividual> selection(ArrayList<AbstractIndividual> individuals, int amount) {
+    public ArrayList<AbstractIndividual> selection(ArrayList<AbstractIndividual> individuals, EvolutionConfig config) {
 
         sortIndividuals(individuals);
         List<AbstractIndividual> toBeRemoved = new ArrayList<>();
-        for (AbstractIndividual e: individuals) {
+        for (AbstractIndividual e : individuals) {
             logger.log(Level.INFO, "{0}", e.getFitness());
-            if (e.getFitness() < EvolutionConstants.DELETE_THRESHOLD) {
+            if (e.getFitness() < config.getDeleteThreshold()) {
                 logger.log(Level.WARNING, "Individual: {0} below threshold.", e.getId());
                 toBeRemoved.add(e);
             }
         }
         individuals.removeAll(toBeRemoved);
         ArrayList<AbstractIndividual> newPop = new ArrayList<>();
+        int amount = config.getSelection();
         if (amount > individuals.size()) {
             amount = individuals.size(); // if too many are removed
         }
@@ -47,5 +51,10 @@ public class GeneralSelector implements ISelector<AbstractIndividual> {
                 return Float.compare(o2.getFitness(), o1.getFitness());
             }
         });
+    }
+
+    @Override
+    public String getInfo() {
+        return "ALL";
     }
 }

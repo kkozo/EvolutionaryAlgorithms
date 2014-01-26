@@ -6,6 +6,7 @@ import com.jme3.export.Savable;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
+import config.EvolutionConfig;
 import evolution.Mutations;
 import java.io.IOException;
 import util.Assets;
@@ -58,7 +59,7 @@ public abstract class AbstractIndividual<T extends AbstractCreature> implements 
 
     public abstract void read(JmeImporter im) throws IOException;
 
-    public abstract AbstractIndividual<T> createRandomIndividual();
+    public abstract AbstractIndividual<T> createRandomIndividual(EvolutionConfig config);
 
     protected TerrainQuad createNewRandomTerrain() {
         AbstractHeightMap heightmap = new ImageBasedHeightMap(Assets.heightMapImage.getImage());

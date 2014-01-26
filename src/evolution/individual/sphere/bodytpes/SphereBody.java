@@ -7,7 +7,6 @@ import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
-import evolution.EvolutionConstants;
 import java.io.IOException;
 import evolution.nodes.TNode;
 import util.Assets;
@@ -47,7 +46,7 @@ public class SphereBody extends TNode {
     @Override
     public void makeGeometry() {
         geom = new Geometry("creature", new Sphere(25, 25, radius));
-        RigidBodyControl control = new RigidBodyControl(EvolutionConstants.DENSITY * 15);
+        RigidBodyControl control = new RigidBodyControl(5.5f * 15);
         geom.addControl(control);
         geom.getControl(RigidBodyControl.class).setFriction(2f);
 //        control.setPhysicsLocation(new Vector3f(0,getSize().y+0.5f,0));

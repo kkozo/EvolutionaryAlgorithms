@@ -2,6 +2,7 @@ package evolution.individual.box.modifiers;
 
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import config.EvolutionConfig;
 import evolution.Mutations;
 import evolution.Population;
 import evolution.individual.box.BoxIndividual;
@@ -10,16 +11,22 @@ import java.util.List;
 import evolution.individual.box.bodytypes.BoxBody;
 import evolution.individual.box.bodytypes.Joint;
 import evolution.modifiers.IRecombiner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Swaps joints for 2 creatures and returns a list of kids
+ *
  * @author Andi
  */
-public class BoxCreatureRecombiner implements IRecombiner<BoxIndividual>{
+public class BoxCreatureRecombiner implements IRecombiner<BoxIndividual> {
+
+    public final static Logger logger = Logger.getLogger(BoxCreatureRecombiner.class.getName());
 
     @Override
-    public List<BoxIndividual> recombine(List<BoxIndividual> individuals, int size) {
-         ArrayList<BoxIndividual> recombinants = new ArrayList<>();
+    public List<BoxIndividual> recombine(List<BoxIndividual> individuals, EvolutionConfig config) {
+        ArrayList<BoxIndividual> recombinants = new ArrayList<>();
+        int size = config.getKids();
         for (int i = 0; i < size; ++i) {
             int firstIndivIndex = FastMath.nextRandomInt(0, individuals.size() - 1);
             int secIndivIndex = FastMath.nextRandomInt(0, individuals.size() - 1);
@@ -42,11 +49,15 @@ public class BoxCreatureRecombiner implements IRecombiner<BoxIndividual>{
             jointOne.setForces((jointOne.getForces().add(jointTwo.getForces())).divide(2));
             jointOne.setAttachPoint((jointOne.getAttachPoint().add(jointTwo.getAttachPoint())).divide(2));
             ++Population.number;
-            System.out.println("KID " + Population.number + " created out of " + firstIndividual.getId() + " and " + secIndividual.getId());
+            logger.log(Level.INFO, "KID {0} created out of {1} and {2}", new Object[]{Population.number, firstIndividual.getId(), secIndividual.getId()});
             firstIndividual.setId(Population.number);
             recombinants.add(firstIndividual);
         }
         return recombinants;
     }
-    
+
+    @Override
+    public String getInfo() {
+        return "BOX";
+    }
 }
