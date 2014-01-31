@@ -5,3 +5,4 @@ manifest.mf
 javadoc/
 nbproject/private/
 lib/
+settings.cfg
