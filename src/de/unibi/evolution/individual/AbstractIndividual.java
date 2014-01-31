@@ -3,6 +3,7 @@ package de.unibi.evolution.individual;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
@@ -68,11 +69,12 @@ public abstract class AbstractIndividual<T extends AbstractCreature> implements 
         
         TerrainQuad terrainf = new TerrainQuad("my terrain", 65, 129, heightmap.getHeightMap());
 
-        terrainf.setMaterial(Assets.mat_terrain);
+        terrainf.setMaterial(Assets.matTerrain);
         terrainf.setLocalTranslation(0, -100, 0);
         terrainf.setLocalScale(1f, 1f, 1f);
 
         terrainf.setName("TERRAIN");
+        terrainf.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         return Mutations.mutateTerrain(terrainf, 50, 0);
 
     }

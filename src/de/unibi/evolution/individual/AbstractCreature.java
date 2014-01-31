@@ -4,6 +4,7 @@ import com.jme3.bullet.PhysicsSpace;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import java.io.IOException;
@@ -25,7 +26,7 @@ public abstract class AbstractCreature implements Savable {
 
     public abstract TNode getRoot();
 
-    public abstract void getNode(Node rNode, PhysicsSpace space, int id, TerrainQuad quad);
+    public abstract void getNode(Node rNode, PhysicsSpace space, int id, TerrainQuad quad, Vector3f startVector);
 
     public abstract void resetCreature();
 

@@ -9,11 +9,15 @@ import com.jme3.export.binary.BinaryImporter;
 import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.debug.Arrow;
+import com.jme3.shadow.PointLightShadowFilter;
+import com.jme3.shadow.PointLightShadowRenderer;
 import com.jme3.system.AppSettings;
 import de.unibi.config.ConfigCreator;
 import de.unibi.config.EvolutionConfig;
@@ -44,10 +48,10 @@ public class EvoAlgoStart extends SimpleApplication {
     public static void main(String args[]) {
         try {
             EvoAlgoStart app = new EvoAlgoStart();
-            
+
             File file = new File("settings.cfg");
             try {
-                if (file.exists()) { 
+                if (file.exists()) {
                     AppSettings jmeSettings = new AppSettings(true);
                     jmeSettings.load(new FileInputStream(file));
                     app.setShowSettings(false);
@@ -72,6 +76,11 @@ public class EvoAlgoStart extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
+        PointLight light = new PointLight();
+        light.setPosition(new Vector3f(0, -50, 0));
+        light.setRadius(150f);
+        rootNode.addLight(light);
+
 
         File file = new File("settings.cfg");
         getContext().getSettings().setTitle("Terrain Evolution");
@@ -196,14 +205,14 @@ public class EvoAlgoStart extends SimpleApplication {
         rootNode.addControl(evolutionController);
         flyCam.setMoveSpeed(250f);
         setPauseOnLostFocus(false);
-        Arrow bla = new Arrow(new Vector3f(0, 3, 0));
-        Geometry arrowGeom = new Geometry("ARROW", bla);
-        arrowGeom.setLocalTranslation(Vector3f.ZERO.add(new Vector3f(0, -15, 0)));
-//        arrowGeom.lookAt(arrowGeom.localToWorld(new Vector3f(0, 20, 0).normalize(), new Vector3f()), Vector3f.UNIT_X);
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.getAdditionalRenderState().setWireframe(true);
-        mat.setColor("Color", ColorRGBA.Red);
-        arrowGeom.setMaterial(mat);
-        rootNode.attachChild(arrowGeom);
+//        Arrow bla = new Arrow(new Vector3f(0, 3, 0));
+//        Geometry arrowGeom = new Geometry("ARROW", bla);
+//        arrowGeom.setLocalTranslation(Vector3f.ZERO.add(new Vector3f(0, -15, 0)));
+////        arrowGeom.lookAt(arrowGeom.localToWorld(new Vector3f(0, 20, 0).normalize(), new Vector3f()), Vector3f.UNIT_X);
+//        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+//        mat.getAdditionalRenderState().setWireframe(true);
+//        mat.setColor("Color", ColorRGBA.Red);
+//        arrowGeom.setMaterial(mat);
+//        rootNode.attachChild(arrowGeom);
     }
 }

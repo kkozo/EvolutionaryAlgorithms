@@ -7,6 +7,7 @@ import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import de.unibi.evolution.individual.AbstractCreature;
@@ -30,7 +31,8 @@ public class SphereCreature extends AbstractCreature {
     }
 
     @Override
-    public void getNode(Node rNode, PhysicsSpace space, int id, TerrainQuad quad) {
+    public void getNode(Node rNode, PhysicsSpace space, int id, TerrainQuad quad, Vector3f startVector) {
+        rootNode.getGeom().getControl(RigidBodyControl.class).setPhysicsLocation(startVector);
         rNode.attachChild(rootNode.getGeom());
         space.add(rootNode.getGeom().getControl(RigidBodyControl.class));
     }

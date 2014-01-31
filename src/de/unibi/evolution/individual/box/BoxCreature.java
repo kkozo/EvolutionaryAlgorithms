@@ -38,7 +38,8 @@ public class BoxCreature extends AbstractCreature {
     }
 
     @Override
-    public void getNode(Node rNode, PhysicsSpace space, int id, TerrainQuad quad) {
+    public void getNode(Node rNode, PhysicsSpace space, int id, TerrainQuad quad, Vector3f startVector) {
+        rootNode.getGeom().setLocalTranslation(startVector);
         attachCreatureWalker(rNode, space, rootNode, quad);
     }
 

@@ -1,0 +1,27 @@
+MaterialDef terrain {
+	MaterialParameters {
+		Texture2D fDifMap
+		Texture2D fNorMap
+		Texture2D fParMap
+		Texture2D mDifMap
+		Texture2D mNorMap
+		Texture2D mParMap
+		Float shininess
+		Float scale
+		Boolean mapping
+	}
+
+	Technique {
+		LightMode MultiPass
+
+		VertexShader GLSL100: terrain/terrain.vert
+		FragmentShader GLSL100: terrain/terrain.frag
+
+		WorldParameters {
+			WorldViewProjectionMatrix
+			WorldViewMatrix
+			NormalMatrix
+			ViewMatrix
+		}
+	}
+}

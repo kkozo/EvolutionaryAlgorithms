@@ -8,16 +8,21 @@ import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.binary.BinaryExporter;
 import com.jme3.font.BitmapText;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
+import com.jme3.scene.debug.Arrow;
+import com.jme3.scene.shape.Sphere;
 import de.unibi.evolution.individual.AbstractIndividual;
 import de.unibi.evolution.individual.AbstractCreature;
+import de.unibi.util.Assets;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -45,10 +50,14 @@ public class EvolutionController implements Control {
     public static float CURRENT_SPEED = 0f;
     private Camera cam;
     public static boolean CAM_ENABLED = false;
-    private final Vector3f startVector = new Vector3f(0, -15, 0);
-    private final Vector3f targetVector = new Vector3f(0.98028874f, -15.296371f, -61.696625f);
+    private final Vector3f startVector = new Vector3f(0, -20, 0);
+    private final Vector3f targetVector = new Vector3f(0.98028874f, -50.296371f, -61.696625f);
     private float maxDistance = 0f;
     private String extension = ".j3o";
+    private Geometry targetMarker;
+    private Geometry targetMarkerNormal;
+    private Geometry startMarker;
+    private Geometry startMarkerNormal;
 
     public EvolutionController(Node rootNode, BulletAppState bulletAppState, BitmapText bitmapText, Camera cam, Population pop) {
 
@@ -61,6 +70,26 @@ public class EvolutionController implements Control {
         currentIndividualGuiNode = bitmapText;
         this.cam = cam;
         maxDistance = targetVector.distance(startVector);
+
+        Sphere sphere = new Sphere(8, 8, 0.5f);
+        targetMarker = new Geometry("Marker");
+        targetMarker.setLocalScale(5f);
+        targetMarker.setMesh(sphere);
+
+
+        targetMarker.setMaterial(Assets.unshaded);
+        targetMarker.setLocalTranslation(targetVector);
+
+        Arrow arrow = new Arrow(new Vector3f(0, 1, 0));
+        targetMarkerNormal = new Geometry("MarkerNormal");
+        targetMarkerNormal.setMesh(arrow);
+        targetMarkerNormal.setMaterial(Assets.unshaded);
+        targetMarkerNormal.setLocalTranslation(targetVector);
+        startMarker = targetMarker.clone();
+        startMarker.setLocalTranslation(startVector);
+        startMarker.getMaterial().setColor("Color", new ColorRGBA(130f / 255f, 255f / 255f, 0f, 0.6f));
+        startMarkerNormal = targetMarkerNormal.clone();
+        startMarkerNormal.setLocalTranslation(startVector);
         nextIndividual();
     }
 
@@ -109,15 +138,7 @@ public class EvolutionController implements Control {
 
         if (currentIndividual != null && CAM_ENABLED) {
             cam.lookAt(currentIndividual.getCreature().getRoot().getGeom().getLocalTranslation(), Vector3f.UNIT_Y);
-
-//            Mutations.mutateIndividual(currentIndividual,population.getConfig());
-//            removeAllObjects();
-//            AbstractIndividual abs = currentIndividual.clone();
-//            rootNode.attachChild(abs.getTerrain());
-//            RigidBodyControl rig = new RigidBodyControl(0f);
-//            abs.getTerrain().addControl(rig);
-//            abs.getTerrain().getControl(RigidBodyControl.class).setFriction(1.5f);
-//            bulletAppState.getPhysicsSpace().add(rig);
+            System.out.println(cam.getLocation());
         }
     }
 
@@ -146,7 +167,7 @@ public class EvolutionController implements Control {
 
             AbstractCreature creature = currentIndividual.getCreature();
             creature.resetCreature();
-            creature.getNode(rootNode, bulletAppState.getPhysicsSpace(), de.unibi.evoalgo.EvoAlgoStart.creatureID, currentIndividual.getTerrain());
+            creature.getNode(rootNode, bulletAppState.getPhysicsSpace(), de.unibi.evoalgo.EvoAlgoStart.creatureID, currentIndividual.getTerrain(), startVector);
         }
     }
 
@@ -214,12 +235,12 @@ public class EvolutionController implements Control {
      * Fills up the Individual List with several existing ones
      */
     private void fillUpWithExisting() {
-        if (population.getIndividuals().size()>0) {
-        while (population.getIndividuals().size() < population.getConfig().getPopulationSize()) {
-            int index = FastMath.nextRandomInt(0, population.getIndividuals().size() - 1);
-            AbstractIndividual indiv = population.getIndividuals().get(index).clone();
-            population.getIndividuals().add(indiv);
-        }
+        if (population.getIndividuals().size() > 0) {
+            while (population.getIndividuals().size() < population.getConfig().getPopulationSize()) {
+                int index = FastMath.nextRandomInt(0, population.getIndividuals().size() - 1);
+                AbstractIndividual indiv = population.getIndividuals().get(index).clone();
+                population.getIndividuals().add(indiv);
+            }
         } else {
             fillUpToSize();
         }
@@ -229,7 +250,6 @@ public class EvolutionController implements Control {
      * Removes all objects from the scene
      */
     private void removeAllObjects() {
-
         rootNode.detachAllChildren();
         bulletAppState.getPhysicsSpace().getJointList().clear();
 
@@ -242,7 +262,10 @@ public class EvolutionController implements Control {
             bulletAppState.getPhysicsSpace().remove(e);
         }
         bulletAppState.getPhysicsSpace().getRigidBodyList().clear();
-
+        rootNode.attachChild(targetMarker);
+        rootNode.attachChild(targetMarkerNormal);
+        rootNode.attachChild(startMarker);
+        rootNode.attachChild(startMarkerNormal);
     }
 
     @Override

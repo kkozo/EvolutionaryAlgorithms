@@ -49,7 +49,7 @@ public class BoxIndividual extends AbstractIndividual<BoxCreature> {
         indiv.setCreature(creature.clone());
         TerrainQuad terrainf = new TerrainQuad("my terrain", 65, 129, terrain.getHeightMap().clone());
 
-        terrainf.setMaterial(Assets.mat_terrain);
+        terrainf.setMaterial(Assets.matTerrain);
         terrainf.setLocalTranslation(0, -100, 0);
         terrainf.setLocalScale(1f, 1f, 1f);
 

@@ -4,7 +4,10 @@ import com.jme3.asset.AssetManager;
 import com.jme3.asset.TextureKey;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
+import com.jme3.math.ColorRGBA;
 import com.jme3.texture.Texture;
+import com.jme3.texture.Texture.WrapMode;
 
 /**
  * Loads different types of assets for future use in other classes.
@@ -17,7 +20,8 @@ public class Assets {
     public static Material wall_mat;
     public static Material stone_mat;
     public static Texture heightMapImage;
-    public static Material mat_terrain;
+    public static Material matTerrain;
+    public static Material unshaded;
 
     public static void loadAssets(AssetManager assetManager) {
         assetManager.registerLocator("assets", FileLocator.class);
@@ -42,29 +46,26 @@ public class Assets {
 
         heightMapImage = assetManager.loadTexture(
                 "Textures/Terrain/splat/flats128.png");
-        mat_terrain = new Material(assetManager,
-                "Common/MatDefs/Terrain/Terrain.j3md");
 
-        mat_terrain.setTexture("Alpha", assetManager.loadTexture(
-                "Textures/Terrain/splat/alphamap3.png"));
+        float dirtScale = 16;
 
-        Texture grass = assetManager.loadTexture(
-                "Textures/Terrain/splat/grass.jpg");
-        grass.setWrap(Texture.WrapMode.Repeat);
-        mat_terrain.setTexture("Tex1", grass);
-        mat_terrain.setFloat("Tex1Scale", 64f);
+        matTerrain = new Material(assetManager,
+                "terrain/terrainf.j3md");
 
-        Texture dirt = assetManager.loadTexture(
-                "Textures/Terrain/splat/dirt.jpg");
-        dirt.setWrap(Texture.WrapMode.Repeat);
-        mat_terrain.setTexture("Tex2", dirt);
-        mat_terrain.setFloat("Tex2Scale", 32f);
+        Texture grassf = assetManager.loadTexture("terrain/eben2.png");
 
+        grassf.setWrap(WrapMode.Repeat);
+        matTerrain.setTexture("fDifMap", grassf);
+        matTerrain.setFloat("scale", dirtScale);
+        matTerrain.setBoolean("mapping", false);
+        // DIRT texture
+        Texture dirtf = assetManager.loadTexture("terrain/berg2.png");
+        dirtf.setWrap(WrapMode.Repeat);
+        matTerrain.setTexture("mDifMap", dirtf);
 
-        Texture rock = assetManager.loadTexture(
-                "Textures/Terrain/splat/road.jpg");
-        rock.setWrap(Texture.WrapMode.Repeat);
-        mat_terrain.setTexture("Tex3", rock);
-        mat_terrain.setFloat("Tex3Scale", 128f);
+        unshaded = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        unshaded.setColor("Color", new ColorRGBA(251f / 255f, 130f / 255f, 0f, 0.6f));
+        unshaded.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+
     }
 }

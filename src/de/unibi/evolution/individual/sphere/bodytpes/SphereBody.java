@@ -5,6 +5,7 @@ import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 import java.io.IOException;
@@ -53,6 +54,7 @@ public class SphereBody extends TNode {
         geom.setMaterial(Assets.stone_mat);
         control.setRestitution(1f);
         control.setDamping(0.1f, 0.1f);
+        geom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
     }
 
     @Override
