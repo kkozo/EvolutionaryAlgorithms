@@ -19,6 +19,7 @@ import java.io.IOException;
 
 /**
  * A type of creature that connects boxes with joints. Joints can move.
+ *
  * @author Andi
  */
 public class BoxIndividual extends AbstractIndividual<BoxCreature> {
@@ -47,9 +48,9 @@ public class BoxIndividual extends AbstractIndividual<BoxCreature> {
     public BoxIndividual clone() {
         BoxIndividual indiv = new BoxIndividual(id);
         indiv.setCreature(creature.clone());
-        TerrainQuad terrainf = new TerrainQuad("my terrain", 65, 129, terrain.getHeightMap().clone());
+        TerrainQuad terrainf = new TerrainQuad("my terrain", 65, terrain.getTerrainSize(), terrain.getHeightMap().clone());
 
-        terrainf.setMaterial(Assets.matTerrain);
+        terrainf.setMaterial(terrain.getMaterial().clone());
         terrainf.setLocalTranslation(0, -100, 0);
         terrainf.setLocalScale(1f, 1f, 1f);
 
@@ -57,7 +58,6 @@ public class BoxIndividual extends AbstractIndividual<BoxCreature> {
         indiv.setTerrain(terrainf);
         return indiv;
     }
-   
 
     @Override
     public void write(JmeExporter ex) throws IOException {
@@ -77,7 +77,7 @@ public class BoxIndividual extends AbstractIndividual<BoxCreature> {
     @Override
     public AbstractIndividual<BoxCreature> createRandomIndividual(EvolutionConfig config) {
         BoxIndividual newOne = new BoxIndividual(number++);
-        newOne.setTerrain(createNewRandomTerrain());
+        newOne.setTerrain(createNewRandomTerrain(config));
         Vector3f rootBoxSize = new Vector3f(FastMath.nextRandomFloat(), FastMath.nextRandomFloat(), FastMath.nextRandomFloat()).normalize();
         BoxBody rootBody = new BoxBody(rootBoxSize, "Main");
         int initialJoints = FastMath.nextRandomInt(1, config.getJointInitMax());
@@ -93,10 +93,8 @@ public class BoxIndividual extends AbstractIndividual<BoxCreature> {
         newOne.setCreature(creat);
         return newOne;
     }
-    
-   
 
-   public BoxBody createBoxBody(int max) {
+    public BoxBody createBoxBody(int max) {
         Vector3f boxSize = new Vector3f(FastMath.nextRandomFloat(), FastMath.nextRandomFloat(), FastMath.nextRandomFloat()).normalize();
         BoxBody boxBody = new BoxBody(boxSize, "bodyType");
         if (max > 0) {
@@ -120,7 +118,4 @@ public class BoxIndividual extends AbstractIndividual<BoxCreature> {
     public final String getType() {
         return "BOX";
     }
-    
-    
-
 }

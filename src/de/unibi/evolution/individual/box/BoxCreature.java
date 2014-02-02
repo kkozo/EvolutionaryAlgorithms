@@ -22,6 +22,7 @@ import de.unibi.evolution.nodes.TNode;
 
 /**
  * Extension of AbstractCreature for the Box Creature
+ *
  * @author Andi
  */
 public class BoxCreature extends AbstractCreature {
@@ -40,7 +41,7 @@ public class BoxCreature extends AbstractCreature {
     @Override
     public void getNode(Node rNode, PhysicsSpace space, int id, TerrainQuad quad, Vector3f startVector) {
         rootNode.getGeom().setLocalTranslation(startVector);
-        attachCreatureWalker(rNode, space, rootNode, quad);
+        attachCreatureWalker(rNode, space, rootNode, quad, startVector);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class BoxCreature extends AbstractCreature {
         return rootNode;
     }
 
-    private void attachCreatureWalker(Node node, PhysicsSpace space, TNode tnode, TerrainQuad quad) {
+    private void attachCreatureWalker(Node node, PhysicsSpace space, TNode tnode, TerrainQuad quad, Vector3f startVector) {
 //        ((BoxBody) tnode).makeGeometry();
         node.attachChild(tnode.getGeom());
         space.add(tnode.getGeom().getControl(RigidBodyControl.class));
@@ -61,12 +62,12 @@ public class BoxCreature extends AbstractCreature {
         for (Joint e : tnode.getChildren()) {
             TNode eNode = e.getChild();
             BoxBody eff = (BoxBody) eNode;
-            space.add(joinTwoEntities((BoxBody) tnode, eff, e, quad));
+            space.add(joinTwoEntities((BoxBody) tnode, eff, e, quad, startVector));
             Geometry beff = eff.getGeom();
             beff.setUserData("ID", id);
             space.add(beff.getControl(RigidBodyControl.class));
 
-            attachCreatureWalker(node, space, eff, quad);
+            attachCreatureWalker(node, space, eff, quad, startVector);
         }
 
 
@@ -84,7 +85,7 @@ public class BoxCreature extends AbstractCreature {
 
     }
 
-    private SixDofJoint joinTwoEntities(BoxBody a, BoxBody b, Joint joint, TerrainQuad terrain) {
+    private SixDofJoint joinTwoEntities(BoxBody a, BoxBody b, Joint joint, TerrainQuad terrain, Vector3f startVector) {
 
         Vector3f point = new Vector3f(joint.getAttachPoint().x * a.getBox().xExtent, joint.getAttachPoint().y * a.getBox().yExtent, joint.getAttachPoint().z * a.getBox().zExtent);
         Vector3f otherPoint = new Vector3f(-b.getOrigin().x * b.getBox().xExtent * 1.8f, -b.getOrigin().y * b.getBox().yExtent * 1.8f, -b.getOrigin().z * b.getBox().zExtent * 1.8f);
@@ -92,8 +93,8 @@ public class BoxCreature extends AbstractCreature {
         SixDofJoint cj = new SixDofJoint(a.getGeom().getControl(RigidBodyControl.class), b.getGeom().getControl(RigidBodyControl.class), point, otherPoint, false);
         a.getGeom().getControl(RigidBodyControl.class).setUserObject("body");
         b.getGeom().getControl(RigidBodyControl.class).setUserObject("body");
-        a.getGeom().getControl(RigidBodyControl.class).setPhysicsLocation(Mutations.createRandomVector().mult(((FastMath.nextRandomFloat() * 10) - 5)));
-        b.getGeom().getControl(RigidBodyControl.class).setPhysicsLocation(Mutations.createRandomVector().mult(((FastMath.nextRandomFloat() * 10) - 5)));
+        a.getGeom().getControl(RigidBodyControl.class).setPhysicsLocation(startVector.add(Mutations.createRandomVector().mult(((FastMath.nextRandomFloat() * 10) - 5))));
+        b.getGeom().getControl(RigidBodyControl.class).setPhysicsLocation(startVector.add(Mutations.createRandomVector().mult(((FastMath.nextRandomFloat() * 10) - 5))));
         cj.setCollisionBetweenLinkedBodys(false);
         a.getGeom().getControl(RigidBodyControl.class).setAngularDamping(1.1f);
 //         a.getGeom().getControl(RigidBodyControl.class).setLinearDamping(1.5f);
@@ -110,9 +111,9 @@ public class BoxCreature extends AbstractCreature {
         cj.getRotationalLimitMotor(1).setBounce(0.5f);
         cj.getRotationalLimitMotor(2).setBounce(0.5f);
         b.getGeom().setUserData("cj", cj);
-        cj.getRotationalLimitMotor(0).setMaxMotorForce(50);
-        cj.getRotationalLimitMotor(1).setMaxMotorForce(50);
-        cj.getRotationalLimitMotor(2).setMaxMotorForce(50);
+        cj.getRotationalLimitMotor(0).setMaxMotorForce(15);
+        cj.getRotationalLimitMotor(1).setMaxMotorForce(15);
+        cj.getRotationalLimitMotor(2).setMaxMotorForce(15);
         b.getGeom().addControl(new MovementListener(joint, b.getGeom(), cj, terrain));
 //        InsertListener.jointList.add(cj);
 //        cj.getRotationalLimitMotor(0).setTargetVelocity(0.3f);

@@ -50,16 +50,12 @@ public class Mutations {
         for (int i = 0; i < max; ++i) {
             float p = FastMath.nextRandomFloat();
             if (p > strength) {
-                float locx = (FastMath.nextRandomFloat() * 63.5f * 2) - 63.5f;
-                float locz = (FastMath.nextRandomFloat() * 63.5f * 2) - 63.5f;
-                float radius = FastMath.nextRandomFloat() * 32 + 8;
+                float halfsize = terrain.getTerrainSize()/2;
+                float locx = (FastMath.nextRandomFloat() * halfsize * 2) - halfsize;
+                float locz = (FastMath.nextRandomFloat() * halfsize* 2) - halfsize;
+                float radius = FastMath.nextRandomFloat() * terrain.getTerrainSize()/8 + terrain.getTerrainSize()/16;
                 float str = FastMath.nextRandomFloat() * (config.getMaxHeight() * 2) - config.getMaxHeight();
                 adjustHeight(new Vector3f(locx, 0, locz), radius, str, terrain);
-
-//                if (strength > 0) {
-//                    System.out.println("smoothing");
-//                    smoothAll(terrain,8f);
-//                }
             }
         }
 
@@ -74,11 +70,8 @@ public class Mutations {
             mutateBox((BoxBody) tnode, ((BoxCreature) individual.getCreature()).getJoints());
             EvaluationLogger.BOXES_MUTATED++;
             mutationCount++;
-
-//            System.out.println("BOX MUTATED");
         }
         if (mutationCount > config.getMaxCreatureMutations()) {
-//            System.out.println("MUT_MAX REACHED");
             return;
         }
         float p = FastMath.nextRandomFloat();
@@ -94,7 +87,6 @@ public class Mutations {
                 one.setChild(two.getChild());
                 two.setChild(temp);
                 mutationCount++;
-//                System.out.println("JOINT SWAP");
                 EvaluationLogger.JOINTS_MUTATED++;
             } else {
                 if (!tnode.getChildren().isEmpty()) {
@@ -102,7 +94,6 @@ public class Mutations {
                     mutateJoint(tnode.getChildren().get(whichJoint));
                     EvaluationLogger.JOINTS_MUTATED++;
                     mutationCount++;
-//                    System.out.println("OTHER JOINT MUTATION");
                 }
             }
         }
@@ -110,9 +101,7 @@ public class Mutations {
         for (Joint e : tnode.getChildren()) {
             TNode eNode = e.getChild();
             BoxBody eff = (BoxBody) eNode;
-//            System.out.println("TRAVERSING");
             if (mutationCount > config.getMaxCreatureMutations()) {
-//                System.out.println("MAX REACHED");
                 return;
             }
             mutationWalker(eff, individual);
@@ -214,9 +203,7 @@ public class Mutations {
                     BoxBody myBody = creator.createBoxBody(1);
                     myJoint.setChild(myBody);
                     b.getChildren().add(myJoint);
-                    System.out.println("ADDED A JOINT");
                 } else {
-                    System.out.println("MAX_REACHED");
                 }
             } else if (nrOfJoints > config.getJointMinPerIndividual()) { // delete a joint if not at minimum
                 if (b.getChildren().size() > 1) {
@@ -258,7 +245,6 @@ public class Mutations {
         float deviation = 0f;
         for (int i = 0; i < 5000; ++i) {
             float temp = gaussianFloat(MUT_DEVIATION);
-//            System.out.println(temp);
             deviation += temp;
         }
         BoxIndividual indiv = (BoxIndividual) new BoxIndividual().createRandomIndividual(new EvolutionConfig());

@@ -18,7 +18,7 @@ import de.unibi.util.Assets;
  */
 public class SphereBody extends TNode {
 
-    private float radius = 1f;
+    private float radius = 4f;
     private Geometry geom;
 
     public SphereBody() {
@@ -47,7 +47,7 @@ public class SphereBody extends TNode {
     @Override
     public void makeGeometry() {
         geom = new Geometry("creature", new Sphere(25, 25, radius));
-        RigidBodyControl control = new RigidBodyControl(5.5f * 15);
+        RigidBodyControl control = new RigidBodyControl(3f * 15);
         geom.addControl(control);
         geom.getControl(RigidBodyControl.class).setFriction(2f);
 //        control.setPhysicsLocation(new Vector3f(0,getSize().y+0.5f,0));

@@ -1,20 +1,17 @@
 package de.unibi.config;
 
 import de.unibi.evolution.individual.AbstractIndividual;
-import de.unibi.evolution.individual.box.BoxIndividual;
-import de.unibi.evolution.individual.sphere.SphereIndividual;
-import de.unibi.evolution.individual.box.modifiers.BoxCreatureRecombiner;
-import de.unibi.evolution.individual.box.modifiers.BoxMutator;
 import de.unibi.evolution.modifiers.IFitness;
-import de.unibi.evolution.modifiers.general.GeneralSelector;
 import de.unibi.evolution.modifiers.IMutator;
 import de.unibi.evolution.modifiers.IRecombiner;
 import de.unibi.evolution.modifiers.ISelector;
-import de.unibi.evolution.modifiers.general.NonRecombiner;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,6 +77,46 @@ public class ConfigCreator {
 
     }
 
+    public static List<String> getAllCreatures() {
+        List<String> strings = new ArrayList<>();
+        for (Entry<String, Class<? extends AbstractIndividual>> e : individuals.entrySet()) {
+            strings.add(e.getKey());
+        }
+        return strings;
+    }
+
+    public static List<String> getAllMutator() {
+        List<String> strings = new ArrayList<>();
+        for (Entry<String, Class<? extends IMutator>> e : mutatorMap.entrySet()) {
+            strings.add(e.getKey());
+        }
+        return strings;
+    }
+
+    public static List<String> getAllFitness() {
+        List<String> strings = new ArrayList<>();
+        for (Entry<String, Class<? extends IFitness>> e : fitnessMap.entrySet()) {
+            strings.add(e.getKey());
+        }
+        return strings;
+    }
+
+    public static List<String> getAllRecombiner() {
+        List<String> strings = new ArrayList<>();
+        for (Entry<String, Class<? extends IRecombiner>> e : recombinerMap.entrySet()) {
+            strings.add(e.getKey());
+        }
+        return strings;
+    }
+
+    public static List<String> getAllSelector() {
+        List<String> strings = new ArrayList<>();
+        for (Entry<String, Class<? extends ISelector>> e : selectorMap.entrySet()) {
+            strings.add(e.getKey());
+        }
+        return strings;
+    }
+
     public static EvolutionConfig createConfig(String individual, String selector, String mutator, String recombiner, String fitness) {
         EvolutionConfig config = new EvolutionConfig();
         config.setSelector(getSelector(selector));
@@ -111,6 +148,7 @@ public class ConfigCreator {
             return null;
         }
     }
+
     public static IFitness getFitness(String name) {
         if (fitnessMap.containsKey(name)) {
             try {

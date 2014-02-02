@@ -10,6 +10,7 @@ import de.unibi.evolution.modifiers.IFitness;
 import de.unibi.evolution.modifiers.IMutator;
 import de.unibi.evolution.modifiers.IRecombiner;
 import de.unibi.evolution.modifiers.ISelector;
+import de.unibi.evolution.modifiers.general.TargetFitness;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +29,7 @@ public class EvolutionConfig implements Savable {
     private IFitness fitnessFunction;
     private AbstractIndividual individualType;
     private int populationSize;
-    private int selection;
+    private int selectionSize;
     private int kids;
     private float evalTime;
     private int jointMaxPerIndividual;
@@ -40,11 +41,14 @@ public class EvolutionConfig implements Savable {
     private float deleteThreshold;
     private String name;
     private int jointInitMax;
-    
+    private String color;
+    private int terrainSize;
+    private float creatMutStr;
+
     public EvolutionConfig() {
         jointInitMax = 4;
-        populationSize = 100;
-        selection = 35;
+        populationSize = 25;
+        selectionSize = 10;
         kids = 5;
         evalTime = 20f;
         jointMaxPerIndividual = 10;
@@ -55,6 +59,25 @@ public class EvolutionConfig implements Savable {
         maxHeight = 6.5f;
         deleteThreshold = -15f;
         name = "Default";
+        color = "MINT";
+        terrainSize = 129;
+        creatMutStr = 0.9f;
+    }
+
+    public float getCreatMutStr() {
+        return creatMutStr;
+    }
+
+    public void setCreatMutStr(float creatMutStr) {
+        this.creatMutStr = creatMutStr;
+    }
+
+    public int getTerrainSize() {
+        return terrainSize;
+    }
+
+    public void setTerrainSize(int size) {
+        this.terrainSize = size;
     }
 
     public IFitness getFitnessFunction() {
@@ -121,12 +144,12 @@ public class EvolutionConfig implements Savable {
         this.populationSize = populationSize;
     }
 
-    public int getSelection() {
-        return selection;
+    public int getSelectionSize() {
+        return selectionSize;
     }
 
-    public void setSelection(int selection) {
-        this.selection = selection;
+    public void setSelectionSize(int selection) {
+        this.selectionSize = selection;
     }
 
     public int getKids() {
@@ -201,12 +224,20 @@ public class EvolutionConfig implements Savable {
         this.deleteThreshold = deleteThreshold;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     @Override
     public void write(JmeExporter ex) throws IOException {
         OutputCapsule out = ex.getCapsule(this);
         out.write(populationSize, "popSize", 25);
         out.write(jointInitMax, "jointInitMax", 4);
-        out.write(selection, "selection", 10);
+        out.write(selectionSize, "selection", 10);
         out.write(kids, "kids", 5);
         out.write(evalTime, "evalTime", 150f);
         out.write(jointMaxPerIndividual, "jointMaxPerIndividual", 10);
@@ -214,6 +245,7 @@ public class EvolutionConfig implements Savable {
         out.write(maxCreatureMutations, "maxCreatureMutations", 3);
         out.write(maxTerrainMutations, "maxTerrainMutations", 1);
         out.write(terrainMutStr, "terrainMutStr", 0.7f);
+        out.write(creatMutStr, "creatureMutStr", 0.9f);
         out.write(maxHeight, "maxHeight", 4.5f);
         out.write(deleteThreshold, "deleteThreshold", -5f);
         out.write(name, "name", "Default");
@@ -221,6 +253,9 @@ public class EvolutionConfig implements Savable {
         out.write(recombiner.getInfo(), "recombiner", "BOX");
         out.write(mutator.getInfo(), "mutator", "BOX");
         out.write(selector.getInfo(), "selector", "BOX");
+        out.write(fitnessFunction, "fitnessFunc", new TargetFitness());
+        out.write(color, "color", "MINT");
+        out.write(terrainSize, "terrSize", 129);
     }
 
     @Override
@@ -228,7 +263,7 @@ public class EvolutionConfig implements Savable {
         InputCapsule in = im.getCapsule(this);
         jointInitMax = in.readInt("jointInitMax", 4);
         populationSize = in.readInt("popSize", 25);
-        selection = in.readInt("selection", 10);
+        selectionSize = in.readInt("selection", 10);
         kids = in.readInt("kids", 5);
         evalTime = in.readFloat("evalTime", 50f);
         jointMaxPerIndividual = in.readInt("jointMaxPerIndividual", 10);
@@ -239,11 +274,14 @@ public class EvolutionConfig implements Savable {
         maxHeight = in.readFloat("maxHeight", 4.5f);
         deleteThreshold = in.readFloat("deleteThreshold", -5f);
         name = in.readString("name", "Default");
+        color = in.readString("color", "MINT");
+        terrainSize = in.readInt("terrSize", 129);
+        fitnessFunction = (IFitness) in.readSavable("fitnessFunc", new TargetFitness());
         String individualTypeS = in.readString("individualType", "SPHERE");
         String recombinerS = in.readString("recombiner", "NON");
         String mutatorS = in.readString("mutator", "BOX");
         String selectorS = in.readString("selector", "ALL");
-
+        creatMutStr = in.readFloat("creatureMutStr", 0.9f);
         selector = ConfigCreator.getSelector(selectorS);
         recombiner = ConfigCreator.getRecombiner(recombinerS);
         mutator = ConfigCreator.getMutator(mutatorS);

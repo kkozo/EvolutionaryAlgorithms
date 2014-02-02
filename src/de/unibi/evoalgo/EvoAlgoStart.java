@@ -10,17 +10,8 @@ import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.PointLight;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.post.FilterPostProcessor;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.debug.Arrow;
-import com.jme3.shadow.PointLightShadowFilter;
-import com.jme3.shadow.PointLightShadowRenderer;
 import com.jme3.system.AppSettings;
-import de.unibi.config.ConfigCreator;
-import de.unibi.config.EvolutionConfig;
 import de.unibi.evolution.EvolutionController;
 import de.unibi.evolution.Population;
 import de.unibi.gui.MainMenu;
@@ -151,7 +142,7 @@ public class EvoAlgoStart extends SimpleApplication {
         return null;
     }
 
-    public void startEvo(Population pop) throws Exception {
+    public void startEvo(Population pop) {
         this.setDisplayStatView(true);
 
         BitmapText currentIndividualNode = new BitmapText(guiFont, false);
@@ -163,20 +154,13 @@ public class EvoAlgoStart extends SimpleApplication {
         guiNode.attachChild(currentIndividualNode);
 //        Population pop = loadPop(loadFilename);
 
-        if (pop == null) {
-            String typeString = "SPHERE";
-
-            EvolutionConfig config = ConfigCreator.createConfig(typeString, "ALL", "BOX", "NON", "TARGET");
-
-            Population genericPop = new Population<>();
-
-            for (int i = 0; i < config.getPopulationSize(); ++i) {
-                genericPop.getIndividuals().add(config.getIndividualType().createRandomIndividual(genericPop.getConfig()));
+        if (pop.getIndividuals().isEmpty()) {
+            for (int i = 0; i < pop.getConfig().getPopulationSize(); ++i) {
+                pop.getIndividuals().add(pop.getConfig().getIndividualType().createRandomIndividual(pop.getConfig()));
             }
-            genericPop.setConfig(config);
-            this.evolutionController = new EvolutionController(rootNode, bulletAppState, currentIndividualNode, cam, genericPop);
+            this.evolutionController = new EvolutionController(rootNode, bulletAppState, currentIndividualNode, pop, cam, inputManager, settings);
         } else {
-            this.evolutionController = new EvolutionController(rootNode, bulletAppState, currentIndividualNode, cam, pop);
+            this.evolutionController = new EvolutionController(rootNode, bulletAppState, currentIndividualNode, pop, cam, inputManager, settings);
         }
         flyCam.setDragToRotate(false);
         MainControlsListener iL = new MainControlsListener(bulletAppState, evolutionController);
@@ -186,15 +170,15 @@ public class EvoAlgoStart extends SimpleApplication {
                 new KeyTrigger(KeyInput.KEY_SUBTRACT));
         inputManager.addMapping("speedup",
                 new KeyTrigger(KeyInput.KEY_ADD));
-        inputManager.addMapping("start",
-                new KeyTrigger(KeyInput.KEY_SPACE));
+//        inputManager.addMapping("start",
+//                new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("del",
                 new KeyTrigger(KeyInput.KEY_DELETE));
         inputManager.addMapping("focus",
                 new KeyTrigger(KeyInput.KEY_M));
         inputManager.addMapping("save",
                 new KeyTrigger(KeyInput.KEY_F10));
-        inputManager.addListener(iL, "reset", "speedup", "speeddown", "start", "del", "focus", "save");
+        inputManager.addListener(iL, "reset", "speedup", "speeddown", "del", "focus", "save");
 
         /**
          * Initialize the scene, materials, and physics space

@@ -5,9 +5,7 @@ import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.export.Savable;
-import de.unibi.config.ConfigCreator;
 import de.unibi.config.EvolutionConfig;
-import de.unibi.evolution.individual.AbstractIndividual;
 
 import java.io.IOException;
 import java.util.ArrayList;

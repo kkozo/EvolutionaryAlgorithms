@@ -33,7 +33,7 @@ public class GeneralSelector implements ISelector<AbstractIndividual> {
         }
         individuals.removeAll(toBeRemoved);
         ArrayList<AbstractIndividual> newPop = new ArrayList<>();
-        int amount = config.getSelection();
+        int amount = config.getSelectionSize();
         if (amount > individuals.size()) {
             amount = individuals.size(); // if too many are removed
         }
