@@ -11,7 +11,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import de.unibi.config.EvolutionConfig;
-import de.unibi.evolution.Mutations;
+import de.unibi.util.Mutations;
 import static de.unibi.evolution.Population.number;
 import de.unibi.evolution.individual.AbstractIndividual;
 import de.unibi.util.Assets;

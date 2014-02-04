@@ -8,7 +8,7 @@ import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import de.unibi.config.EvolutionConfig;
-import de.unibi.evolution.Mutations;
+import de.unibi.util.Mutations;
 import java.io.IOException;
 import de.unibi.util.Assets;
 

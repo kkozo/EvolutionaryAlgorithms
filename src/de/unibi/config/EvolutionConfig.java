@@ -16,33 +16,103 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * TODO: Implement fully EvolutionConfig
+ * This config saves most of the variables like population size in an object.
  *
  * @author Andi
  */
 public class EvolutionConfig implements Savable {
 
     private static final Logger logger = Logger.getLogger(EvolutionConfig.class.getName());
+    /**
+     * Recombiner function.
+     */
     private IRecombiner recombiner;
+    /**
+     * Mutator Function.
+     */
     private IMutator mutator;
+    /**
+     * Selector function.
+     */
     private ISelector selector;
+    /**
+     * Fitness function.
+     */
     private IFitness fitnessFunction;
+    /**
+     * Type of Individual.
+     */
     private AbstractIndividual individualType;
+    /**
+     * Population size
+     */
     private int populationSize;
+    /**
+     * How many individuals will be selected.
+     */
     private int selectionSize;
+    /**
+     * Amount of kids that will be created by the recombiner.
+     */
     private int kids;
+    /**
+     * How much time each individual has during the evaluation.
+     */
     private float evalTime;
+    /**
+     * Only used for Box individuals.
+     * Maximum of joints for the individual.
+     */
     private int jointMaxPerIndividual;
+    /**
+     * Only used for Box individuals.
+     * Minimum of joints for the individual.
+     */
     private int jointMinPerIndividual;
+    /**
+     * Maximum of mutations per creature if multiple are allowed.
+     */
     private int maxCreatureMutations;
+    /**
+     * Maximum of mutation for the terrain.
+     */
     private int maxTerrainMutations;
+    /**
+     * Chance that the terrain will be mutated each mutation step.
+     */
     private float terrainMutStr;
+    /**
+     * Maximum of height that the terrain can be deformed.
+     * High value = Big changes, Low values = Small changes.
+     */
     private float maxHeight;
+    /**
+     * Defines the value when a creature is deleted. 
+     * 
+     */
     private float deleteThreshold;
+    /**
+     * Name for saves and stats.
+     */
     private String name;
+    /**
+     * Used for boxindividual.
+     * How many joints are initally in the creature.
+     */
     private int jointInitMax;
+    /**
+     * Color of the terrain. Green or mint.
+     */
     private String color;
+    /**
+     * Size of terrain. 
+     * This has to be (2^N)+1 (129,257,513)
+     */
     private int terrainSize;
+    /**
+     * How often mutations should occur.
+     * High number = no mutations, low number = many mutations.
+     */
     private float creatMutStr;
 
     public EvolutionConfig() {
@@ -50,13 +120,13 @@ public class EvolutionConfig implements Savable {
         populationSize = 25;
         selectionSize = 10;
         kids = 5;
-        evalTime = 20f;
+        evalTime = 100f;
         jointMaxPerIndividual = 10;
         jointMinPerIndividual = 2;
         maxCreatureMutations = 3;
         maxTerrainMutations = 1;
         terrainMutStr = 0.3f;
-        maxHeight = 6.5f;
+        maxHeight = 9.5f;
         deleteThreshold = -15f;
         name = "Default";
         color = "MINT";

@@ -69,7 +69,6 @@ public class MovementListener implements Control {
 
     @Override
     public void setSpatial(Spatial spatial) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -81,12 +80,10 @@ public class MovementListener implements Control {
         if (joint.getJointType() == JointTypes.reactiveJoint) {
             if (checkCollision()) {
                 setEnabled(true);
-//                doMovement(tpf);
                 setMovement(true);
             } else {
                 setEnabled(false);
                 setMovement(false);
-//                movement = 0f;
             }
         }
     }
@@ -110,12 +107,10 @@ public class MovementListener implements Control {
 
     private void setMovement(boolean state) {
         if (state) {
-//            System.out.println("MOTOR ON");
             sixDof.getRotationalLimitMotor(0).setEnableMotor(true);
             sixDof.getRotationalLimitMotor(1).setEnableMotor(true);
             sixDof.getRotationalLimitMotor(2).setEnableMotor(true);
         } else {
-//            System.out.println("MOTOR OFF");
             sixDof.getRotationalLimitMotor(0).setEnableMotor(false);
             sixDof.getRotationalLimitMotor(1).setEnableMotor(false);
             sixDof.getRotationalLimitMotor(2).setEnableMotor(false);
@@ -141,16 +136,13 @@ public class MovementListener implements Control {
 
     @Override
     public void render(RenderManager rm, ViewPort vp) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void write(JmeExporter ex) throws IOException {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void read(JmeImporter im) throws IOException {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

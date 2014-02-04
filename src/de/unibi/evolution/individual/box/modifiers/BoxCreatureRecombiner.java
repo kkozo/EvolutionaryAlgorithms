@@ -3,7 +3,7 @@ package de.unibi.evolution.individual.box.modifiers;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import de.unibi.config.EvolutionConfig;
-import de.unibi.evolution.Mutations;
+import de.unibi.util.Mutations;
 import de.unibi.evolution.Population;
 import de.unibi.evolution.individual.box.BoxIndividual;
 import java.util.ArrayList;

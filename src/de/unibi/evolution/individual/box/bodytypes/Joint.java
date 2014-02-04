@@ -7,7 +7,7 @@ import com.jme3.export.OutputCapsule;
 import com.jme3.export.Savable;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import de.unibi.evolution.Mutations;
+import de.unibi.util.Mutations;
 import java.io.IOException;
 import de.unibi.evolution.nodes.TNode;
 

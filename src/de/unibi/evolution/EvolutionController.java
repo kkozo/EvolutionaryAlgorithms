@@ -1,5 +1,6 @@
 package de.unibi.evolution;
 
+import de.unibi.util.Mutations;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
@@ -13,7 +14,6 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
@@ -35,7 +35,9 @@ import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import de.unibi.evolution.individual.AbstractIndividual;
 import de.unibi.util.Assets;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -69,6 +71,7 @@ public class EvolutionController implements Control {
     private AppSettings settings;
     private Vector3f currentTarget;
     private InputManager inputManager;
+    private PrintWriter statsWriter;
 
     public EvolutionController(Node rootNode, BulletAppState bulletAppState, BitmapText bitmapText, Population pop, Camera cam, InputManager input, AppSettings settings) {
         this.bulletAppState = bulletAppState;
@@ -106,7 +109,9 @@ public class EvolutionController implements Control {
         terrain.setName("TERRAIN");
         terrain.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
 
-
+        /*
+         * Setting up the markers.
+         */
         Sphere sphere = new Sphere(8, 8, 0.5f);
         targetMarker = new Geometry("Marker");
         targetMarker.setLocalScale(5f);
@@ -144,12 +149,19 @@ public class EvolutionController implements Control {
         inputManager.addListener(actionListener, "Lower");
         inputManager.addMapping("start", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addListener(actionListener, "start");
-
-
+        try {
+            statsWriter = new PrintWriter(new FileWriter(new File(population.getConfig().getName() + "_stats.txt")));
+            statsWriter.println("gen\t best\t avg");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean isPressed, float tpf) {
+            /*
+             * When the deformation is done targets for the fitness function can be set.
+             */
             if (deformComplete) {
                 if (name.equals("Raise") && isPressed) {
                     Vector3f intersection = getWorldIntersection();
@@ -161,18 +173,19 @@ public class EvolutionController implements Control {
 
                 }
             } else {
-                if (name.equals("Raise")) {
-
-                    raiseTerrain = isPressed;
-
-                } else if (name.equals("Lower")) {
-
-                    lowerTerrain = isPressed;
-
+                switch (name) {
+                    case "Raise":
+                        raiseTerrain = isPressed;
+                        break;
+                    case "Lower":
+                        lowerTerrain = isPressed;
+                        break;
                 }
             }
+            /*
+             * When SPACE is pressed deformation of the terrain is done and more targets can be set.
+             */
             if (name.equals("start") && isPressed) {
-
                 if (numTargetsSet == population.getConfig().getFitnessFunction().getMaxTargets()) {
                     STARTED = true;
                     population.getConfig().getFitnessFunction().start();
@@ -201,14 +214,20 @@ public class EvolutionController implements Control {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * The update method handles providing new targets or individuals. Starts
+     * population evaluation whenever a generation is done.
+     *
+     * @param tpf
+     */
     @Override
     public void update(float tpf) {
 
-        if (numTargetsSet == population.getConfig().getFitnessFunction().getMaxTargets()) {
-            currentIndividualGuiNode.setText(getInfoText());
-            if (population.getConfig().getFitnessFunction().isDone()) {
+        if (numTargetsSet == population.getConfig().getFitnessFunction().getMaxTargets()) { // targets are set
+            currentIndividualGuiNode.setText(getInfoText()); // show info text
+            if (population.getConfig().getFitnessFunction().isDone()) { // the fitness function is done evaluating so the next one is provided.
                 currentIndividualNr++;
-                if (currentIndividualNr >= population.getConfig().getPopulationSize()) {
+                if (currentIndividualNr >= population.getConfig().getPopulationSize()) { // the entire generation has been evaluated.
                     evaluatePopulation();
                 } else {
                     population.getConfig().getFitnessFunction().evaluate(population.getIndividuals().get(currentIndividualNr), population.getConfig());
@@ -216,48 +235,55 @@ public class EvolutionController implements Control {
             }
 
         } else {
-            if (!deformComplete) {
+            if (!deformComplete) { // if targets are not set try to deform the terrain.
                 deform(tpf);
             }
         }
     }
 
-    public void deform(float tpf) {
+    /**
+     * Raises or lowers the terrain target point.
+     *
+     * @param tpf
+     */
+    private void deform(float tpf) {
         Vector3f intersection = getWorldIntersection();
-        if (raiseTerrain) {
-            if (intersection != null) {
-                adjustHeight(intersection, population.getConfig().getTerrainSize() / 8, tpf * 60);
-            }
-        } else if (lowerTerrain) {
-            if (intersection != null) {
-                adjustHeight(intersection, population.getConfig().getTerrainSize() / 8, -tpf * 60);
+        if (intersection != null) {
+            if (raiseTerrain) {
+                Mutations.adjustHeight(intersection, population.getConfig().getTerrainSize() / 8, tpf * 60, terrain);
+            } else if (lowerTerrain) {
+                Mutations.adjustHeight(intersection, population.getConfig().getTerrainSize() / 8, -tpf * 60, terrain);
             }
         }
     }
 
     /**
-     * Evaluates the entire population
+     * Evaluates the entire population.
      */
     private void evaluatePopulation() {
         float bestIndividual = 0f;
         int bestNr = -1;
+        float avg = 0;
         for (AbstractIndividual e : population.getIndividuals()) {
             if (e.getFitness() > bestIndividual) {
                 bestIndividual = e.getFitness();
                 bestNr = e.getId();
             }
+            avg += e.getFitness();
 
         }
+        avg = avg / (float) population.getIndividuals().size();
+        statsWriter.println(population.getGeneration() + "\t " + bestIndividual + "\t " + avg);
+        statsWriter.flush();
+        // Selection and recombination
         population.setIndividuals(population.getConfig().getSelector().selection(population.getIndividuals(), population.getConfig()));
         population.getIndividuals().addAll(population.getConfig().getRecombiner().recombine(population.getIndividuals(), population.getConfig()));
+        // then fill up rest of the population size with existing individuals.
         fillUpWithExisting();
         logger.log(Level.INFO, "Best Indivudal has been Nr: {0} with Fitness: {1}", new Object[]{bestNr, bestIndividual});
         EvaluationLogger.BEST_FITNESS = bestIndividual;
         EvaluationLogger.BEST_INDIVIDUAL = bestNr;
-        for (int i = 0; i < population.getConfig().getPopulationSize(); ++i) {
-            logger.log(Level.INFO, "MUTATING: {0}", population.getIndividuals().get(i).getId());
-            Mutations.mutateIndividual(population.getIndividuals().get(i), population.getConfig());
-        }
+        population.setIndividuals(population.getConfig().getMutator().mutate(population.getIndividuals(), population.getConfig()));
 
         EvaluationLogger.flushLog();
         population.setGeneration(population.getGeneration() + 1);
@@ -266,7 +292,8 @@ public class EvolutionController implements Control {
     }
 
     /**
-     * Fills the Individuals with new Creatures
+     * Fills the Individuals with new Creatures. These creatures are randomly
+     * generated.
      */
     private void fillUpToSize() {
         while (population.getIndividuals().size() < population.getConfig().getPopulationSize()) {
@@ -276,7 +303,9 @@ public class EvolutionController implements Control {
     }
 
     /**
-     * Fills up the Individual List with several existing ones
+     * Fills up the Individual list with several existing ones that are provided
+     * in the current list.
+     *
      */
     private void fillUpWithExisting() {
         if (population.getIndividuals().size() > 0) {
@@ -290,49 +319,11 @@ public class EvolutionController implements Control {
         }
     }
 
-    private void adjustHeight(Vector3f loc, float radius, float height) {
-
-        int radiusStepsX = (int) (radius / terrain.getLocalScale().x);
-        int radiusStepsZ = (int) (radius / terrain.getLocalScale().z);
-
-        float xStepAmount = terrain.getLocalScale().x;
-        float zStepAmount = terrain.getLocalScale().z;
-        long start = System.currentTimeMillis();
-        List<Vector2f> locs = new ArrayList<>();
-        List<Float> heights = new ArrayList<>();
-
-        for (int z = -radiusStepsZ; z < radiusStepsZ; z++) {
-            for (int x = -radiusStepsX; x < radiusStepsX; x++) {
-
-                float locX = loc.x + (x * xStepAmount);
-                float locZ = loc.z + (z * zStepAmount);
-
-                if (isInRadius(locX - loc.x, locZ - loc.z, radius)) {
-                    float h = calculateHeight(radius, height, locX - loc.x, locZ - loc.z);
-                    locs.add(new Vector2f(locX, locZ));
-                    heights.add(h);
-                }
-            }
-        }
-        terrain.adjustHeight(locs, heights);
-        terrain.updateModelBound();
-    }
-
-    private boolean isInRadius(float x, float y, float radius) {
-        Vector2f point = new Vector2f(x, y);
-        return point.length() <= radius;
-    }
-
-    private float calculateHeight(float radius, float heightFactor, float x, float z) {
-        Vector2f point = new Vector2f(x, z);
-        float val = point.length() / radius;
-        val = 1 - val;
-        if (val <= 0) {
-            val = 0;
-        }
-        return heightFactor * val;
-    }
-
+    /**
+     * Intersects the terrain and searches for a contact point.
+     *
+     * @return
+     */
     private Vector3f getWorldIntersection() {
         Vector3f origin = cam.getWorldCoordinates(new Vector2f(settings.getWidth() / 2, settings.getHeight() / 2), 0.0f);
         Vector3f direction = cam.getWorldCoordinates(new Vector2f(settings.getWidth() / 2, settings.getHeight() / 2), 0.3f);
@@ -360,6 +351,9 @@ public class EvolutionController implements Control {
     public void read(JmeImporter im) throws IOException {
     }
 
+    /**
+     * Saves the current run of evolution.
+     */
     public void save() {
         int nr = 0;
         String filename = population.getConfig().getName();
@@ -378,21 +372,27 @@ public class EvolutionController implements Control {
         }
     }
 
+    /**
+     * Simple method that generates an info text to display on the screen.
+     *
+     * @return
+     *
+     */
     public String getInfoText() {
         StringBuilder builder = new StringBuilder();
-        if (STARTED){
-        builder.append("Current Individual: ").
-                append(currentIndividualNr).
-                append(" Current Generation:").
-                append(population.getGeneration()).
-                append(". Current time: ").
-                append(String.format("%.2f", population.getConfig().getFitnessFunction().getCurrentTime())).
-                append(" / ").
-                append(population.getConfig().getEvalTime()).
-                append(" At speed: ").
-                append(String.format("%.2f", CURRENT_SPEED));
+        if (STARTED) {
+            builder.append("Current Individual: ").
+                    append(currentIndividualNr).
+                    append(" Current Generation:").
+                    append(population.getGeneration()).
+                    append(". Current time: ").
+                    append(String.format("%.2f", population.getConfig().getFitnessFunction().getCurrentTime())).
+                    append(" / ").
+                    append(population.getConfig().getEvalTime()).
+                    append(" At speed: ").
+                    append(String.format("%.2f", CURRENT_SPEED));
         } else {
-        builder.append("EVOLUTION HALTED. PRESS SPACE TO START");
+            builder.append("EVOLUTION HALTED. PRESS SPACE TO START");
         }
         return builder.toString();
     }

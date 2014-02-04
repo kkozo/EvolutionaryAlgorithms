@@ -14,7 +14,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.terrain.geomipmap.TerrainQuad;
-import de.unibi.evolution.Mutations;
+import de.unibi.util.Mutations;
 import de.unibi.evolution.individual.AbstractCreature;
 import java.io.IOException;
 import de.unibi.listener.MovementListener;

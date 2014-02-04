@@ -1,15 +1,12 @@
-package de.unibi.evolution;
+package de.unibi.util;
 
 import de.unibi.evolution.individual.box.BoxIndividual;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.terrain.geomipmap.TerrainPatch;
 import com.jme3.terrain.geomipmap.TerrainQuad;
-import com.jme3.terrain.noise.filter.IterativeFilter;
-import com.jme3.terrain.noise.filter.SmoothFilter;
-import com.jogamp.common.nio.Buffers;
 import de.unibi.config.EvolutionConfig;
+import de.unibi.evolution.EvaluationLogger;
 import de.unibi.evolution.individual.AbstractIndividual;
 import de.unibi.evolution.individual.box.BoxCreature;
 import java.util.ArrayList;
@@ -18,12 +15,9 @@ import de.unibi.evolution.individual.box.bodytypes.BoxBody;
 import de.unibi.evolution.individual.box.bodytypes.Joint;
 import de.unibi.evolution.individual.box.bodytypes.JointTypes;
 import de.unibi.evolution.nodes.TNode;
-import java.nio.FloatBuffer;
-import java.util.Arrays;
-import java.util.Collections;
 
 /**
- * TODO: Will be outsourced to Mutator Classes Class for a series of mutations.
+ * Provides a collection of mutations for other classes to use.
  *
  * @author Andi
  */
@@ -53,7 +47,7 @@ public class Mutations {
                 float halfsize = terrain.getTerrainSize()/2;
                 float locx = (FastMath.nextRandomFloat() * halfsize * 2) - halfsize;
                 float locz = (FastMath.nextRandomFloat() * halfsize* 2) - halfsize;
-                float radius = FastMath.nextRandomFloat() * terrain.getTerrainSize()/8 + terrain.getTerrainSize()/16;
+                float radius = FastMath.nextRandomFloat() * terrain.getTerrainSize()/6 + terrain.getTerrainSize()/14;
                 float str = FastMath.nextRandomFloat() * (config.getMaxHeight() * 2) - config.getMaxHeight();
                 adjustHeight(new Vector3f(locx, 0, locz), radius, str, terrain);
             }
@@ -298,8 +292,7 @@ public class Mutations {
         return joint;
     }
 
-    private static void adjustHeight(Vector3f loc, float radius, float height, TerrainQuad terrain) {
-        // offset it by radius because in the loop we iterate through 2 radii
+    public static void adjustHeight(Vector3f loc, float radius, float height, TerrainQuad terrain) {
         int radiusStepsX = (int) (radius / terrain.getLocalScale().x);
         int radiusStepsZ = (int) (radius / terrain.getLocalScale().z);
 

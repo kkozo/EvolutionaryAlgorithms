@@ -2,7 +2,7 @@ package de.unibi.evolution.modifiers;
 
 import de.unibi.config.EvolutionConfig;
 import de.unibi.evolution.individual.AbstractIndividual;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Mutates an individual
@@ -11,7 +11,13 @@ import java.util.List;
  */
 public interface IMutator<T extends AbstractIndividual> {
 
-    public List<T> mutate(List<T> individuals, EvolutionConfig config);
+    /**
+     * Mutates a list of Individuals.
+     * @param individuals
+     * @param config
+     * @return
+     */
+    public ArrayList<T> mutate(ArrayList<T> individuals, EvolutionConfig config);
 
     public String getInfo();
 }

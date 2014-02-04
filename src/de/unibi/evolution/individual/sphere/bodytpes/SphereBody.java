@@ -47,9 +47,9 @@ public class SphereBody extends TNode {
     @Override
     public void makeGeometry() {
         geom = new Geometry("creature", new Sphere(25, 25, radius));
-        RigidBodyControl control = new RigidBodyControl(3f * 15);
+        RigidBodyControl control = new RigidBodyControl(1f * 15);
         geom.addControl(control);
-        geom.getControl(RigidBodyControl.class).setFriction(2f);
+        geom.getControl(RigidBodyControl.class).setFriction(1.5f);
 //        control.setPhysicsLocation(new Vector3f(0,getSize().y+0.5f,0));
         geom.setMaterial(Assets.stone_mat);
         control.setRestitution(1f);
