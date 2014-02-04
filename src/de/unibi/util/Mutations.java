@@ -35,7 +35,8 @@ public class Mutations {
         config = cconfig;
         mutationCount = 0;
         if (indiv instanceof BoxIndividual) {
-            mutationWalker(((BoxCreature) indiv.getCreature()).getRoot(), (BoxIndividual) indiv);
+//            mutationWalker(((BoxCreature) indiv.getCreature()).getRoot(), (BoxIndividual) indiv);
+            mutateBoxCreature(config, (BoxIndividual) indiv);
         }
         indiv.setTerrain((TerrainQuad) mutateTerrain(indiv.getTerrain(), config.getMaxTerrainMutations(), config.getTerrainMutStr()).deepClone());
     }
@@ -44,10 +45,10 @@ public class Mutations {
         for (int i = 0; i < max; ++i) {
             float p = FastMath.nextRandomFloat();
             if (p > strength) {
-                float halfsize = terrain.getTerrainSize()/2;
+                float halfsize = terrain.getTerrainSize() / 2;
                 float locx = (FastMath.nextRandomFloat() * halfsize * 2) - halfsize;
-                float locz = (FastMath.nextRandomFloat() * halfsize* 2) - halfsize;
-                float radius = FastMath.nextRandomFloat() * terrain.getTerrainSize()/6 + terrain.getTerrainSize()/14;
+                float locz = (FastMath.nextRandomFloat() * halfsize * 2) - halfsize;
+                float radius = FastMath.nextRandomFloat() * terrain.getTerrainSize() / 6 + terrain.getTerrainSize() / 14;
                 float str = FastMath.nextRandomFloat() * (config.getMaxHeight() * 2) - config.getMaxHeight();
                 adjustHeight(new Vector3f(locx, 0, locz), radius, str, terrain);
             }
@@ -102,6 +103,35 @@ public class Mutations {
         }
 
 
+    }
+
+    public static void mutateBoxCreature(EvolutionConfig config, BoxIndividual individual) {
+        for (int i = 0; i < config.getMaxCreatureMutations(); ++i) {
+            float pBox = FastMath.nextRandomFloat();
+            float pJoint = FastMath.nextRandomFloat();
+            if (pBox > BOX_MUTATION_CONSTANT) {
+                int index = FastMath.nextRandomInt(0, individual.getCreature().getJoints() - 1);
+                Joint toMutate = getJoint((BoxBody) individual.getCreature().getRoot(), index);
+                mutateBox((BoxBody) toMutate.getChild(), individual.getCreature().getJoints());
+            }
+            if (pJoint > JOINT_MUTATION_CONSTANT) {
+                int whichMut = FastMath.nextRandomInt(0, 1);
+                int jointmax = ((BoxCreature) individual.getCreature()).getJoints();
+                int index = FastMath.nextRandomInt(0, individual.getCreature().getJoints() - 1);
+                Joint toMutate = getJoint((BoxBody) individual.getCreature().getRoot(), index);
+                if (whichMut == 0 && jointmax > 1) {
+                    int firstJoint = FastMath.nextRandomInt(0, jointmax - 1);
+                    int secJoint = FastMath.nextRandomInt(0, jointmax - 1);
+                    Joint one = getJoint((BoxBody) ((BoxCreature) individual.getCreature()).getRoot(), firstJoint);
+                    Joint two = getJoint((BoxBody) ((BoxCreature) individual.getCreature()).getRoot(), secJoint);
+                    BoxBody temp = (BoxBody) one.getChild();
+                    one.setChild(two.getChild());
+                    two.setChild(temp);
+                } else {
+                    mutateJoint(toMutate);
+                }
+            }
+        }
     }
 
     public static Joint getJoint(BoxBody box, int i) {
